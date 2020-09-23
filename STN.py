@@ -27,6 +27,10 @@ class STN():
                                      # each index will hold succ dict for 
                                      # each time point
 
+        for i in np.arange(num_edges):
+            np.append(self.__succs, {})
+
+
         for i in np.arange(num_tp):
             self.__tp_hash[i] = self.__tp_names[i]
 
@@ -39,21 +43,22 @@ class STN():
 
         self.__insert_edge(ord_edges[0])
 
-    def __insert_edge(edge): #fmt = [from_tp (tp - not the name) cost to_tp (tp - not the name)]:
+
+    def __find_tp(self, name):
+
+        for tp in np.arange(self.__num_tp):
+            if(self.__tp_hash[tp] == name ):
+                return tp
+
+        return None
+
+    def __insert_edge(self, edge): #fmt = [from_tp (tp - not the name) cost to_tp (tp - not the name)]:
 
         from_tp = self.__find_tp(edge[0])
         cost = edge[1]
         to_tp = self.__find_tp(edge[2])
 
-        __succs[from_tp][to_tp] = cost
-
-    def __find_tp(name):
-
-        for tp in np.arange(num_tp):
-            if(__tp_hash[tp] == name ):
-                return tp
-
-        return None
+        self.__succs[to_tp] = cost
 
 
 names = np.array(['A0', 'C0', 'A1', 'C1', 'X'])
