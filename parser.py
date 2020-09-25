@@ -11,7 +11,6 @@ def stringToArray(input):
     lines_list = stn_string.splitlines()
     
     arr = np.array(lines_list)
-    print(arr)
 
     counter = 0
     idx = []
@@ -21,6 +20,27 @@ def stringToArray(input):
         counter+=1 
     arr = np.delete(arr,idx,axis = 0)
     
-    print(arr)
+    return arr
 
-stringToArray(user_input)
+
+def arrayToString(input):
+    s = ""
+    counter = 0
+    for x in input:
+        if counter == 0:
+            s += "# KIND OF NETWORK\n"
+        elif counter == 1:
+            s += "# Num Time-Points\n"
+        elif counter == 2:
+            s += "# Num Ordinary Edges\n"
+        elif counter == 3:
+            s += "# Time-Point Names\n"
+        elif counter == 4:
+            s += "# Ordinary Edges\n"
+        s += x + "\n"
+        counter += 1
+    return s
+
+our_array = stringToArray(user_input)
+our_string = arrayToString(our_array)
+print(our_string)
