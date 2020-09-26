@@ -34,6 +34,8 @@ class STN():
             self.__insert_edge(ord_edges[i])
 
 
+
+
     def __find_tp(self, name):
 
         for tp in np.arange(self.__num_tp):
@@ -41,6 +43,9 @@ class STN():
                 return tp
 
         return None
+
+
+
 
 
     def __insert_edge(self, edge): #fmt = [from_tp (tp - not the name) cost to_tp (tp - not the name)]:
@@ -52,11 +57,19 @@ class STN():
         self.__succs[from_tp][to_tp] = cost
         self.__preds[to_tp][from_tp] = cost
 
+
+
+
     def get_succs(self):
         return self.__succs
+
+
     
     def get_preds(self):
         return self.__preds
+
+
+        
 
     def get_hash(self):
         return self.__tp_hash

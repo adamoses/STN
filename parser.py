@@ -1,7 +1,8 @@
 import numpy as np
+from STN import *
 
 #will change this so user can choose
-user_input = ("C:\\Users\gptacekLaptop\Downloads\Vassar\Sem5\cmpu382\code\sample_stn.txt")
+user_input = ("sample.txt")
 
 def stringToArray(input):
     stn = open(input, "r")
@@ -19,8 +20,17 @@ def stringToArray(input):
             idx.append(counter)
         counter+=1 
     arr = np.delete(arr,idx,axis = 0)
+
+    num_tp = int(arr[1])
+    num_edges = int(arr[2])
+
+    strings = arr[3]
+    edges = np.array(num_edges)
+
+    for i in np.arange(num_edges):
+        edges[i] = arr[i+4]
     
-    return arr
+    return STN(num_tp, num_edges, strings, edges)
 
 
 def arrayToString(input):
@@ -42,5 +52,5 @@ def arrayToString(input):
     return s
 
 our_array = stringToArray(user_input)
-our_string = arrayToString(our_array)
-print(our_string)
+#our_string = arrayToString(our_array)
+#print(our_array)
