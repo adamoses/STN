@@ -7,7 +7,7 @@ https://www.cs.vassar.edu/~hunsberg/cs382/
 # Tasks for this week:
 
 ## Adam Moses and Daniel Doyon
--
+- Dijkstra's 
 -
 
 ##  Gabor Ptacek and Cameron Flores
