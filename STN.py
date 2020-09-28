@@ -10,13 +10,13 @@ class STN():
         num_tp        -       num of time points (int)
         num_edges     -       num of edges (int)
         tp_names      -       numpy array of time point names (string array)
-        ord_edges     -       numpy array of numpy arrays
-                                fmt = [from_tp cost to_tp]
+        ord_edges     -       numpy array of strings
+                                fmt = "from_tp cost to_tp"
         '''
 
         self.__num_tp = num_tp         
         self.__num_edges = 0  
-        self.__tp_names = tp_names     
+        self.__tp_names = tp_names.split(' ')     
         self.__tp_hash = {}          # initilizing empty dictionary
                                      # for STN data structure
         self.__succs = np.array([])  # initializing empty array
@@ -31,7 +31,8 @@ class STN():
 
          
         for i in np.arange(num_edges):
-            self.__insert_edge(ord_edges[i])
+            string = ord_edges[i]
+            self.__insert_edge(string.split(' '))
 
 
 
@@ -51,7 +52,7 @@ class STN():
     def __insert_edge(self, edge): #fmt = [from_tp (tp - not the name) cost to_tp (tp - not the name)]:
 
         from_tp = self.__find_tp(edge[0])
-        cost = edge[1]
+        cost = int(edge[1])
         to_tp = self.__find_tp(edge[2])
 
         self.__succs[from_tp][to_tp] = cost
@@ -75,20 +76,20 @@ class STN():
         return self.__tp_hash
 
 
-names = np.array(['A0', 'C0', 'A1', 'C1', 'X'])
+names = 'A0 C0 A1 C1 X'
 
-edge1 = np.array(['X', 12, 'C0'])
-edge2 = np.array(['C1', 11, 'C0'])
-edge3 = np.array(['C0', -7, 'X'])
-edge4 = np.array(['C0', -1, 'C1'])
-edge5 = np.array(['A0', 3, 'C0'])
-edge6 = np.array(['C0', -1, 'A0'])
-edge7 = np.array(['A1', 10, 'C1'])
-edge8 = np.array(['C1', -1, 'A1'])
+edge1 = 'X 12 C0'
+edge2 = 'C1 11 C0'
+edge3 = 'C0 -7 X'
+edge4 = 'C0 -1 C1'
+edge5 = 'A0 3 C0'
+edge6 = 'C0 -1 A0'
+edge7 = 'A1 10 C1'
+edge8 = 'C1 -1 A1'
 
 edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
 testSTN = STN(5, 8, names, edges)
 
-p = testSTN.get_hash()
-print(p)
+#p = testSTN.get_preds()
+#print(p)
 

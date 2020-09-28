@@ -4,7 +4,7 @@ from STN import *
 #will change this so user can choose
 user_input = ("sample.txt")
 
-def stringToArray(input):
+def stringToSTN(input):
     stn = open(input, "r")
     stn_string = stn.read()
     stn.close()
@@ -25,12 +25,11 @@ def stringToArray(input):
     num_edges = int(arr[2])
 
     strings = arr[3]
-    edges = np.array(num_edges)
 
-    for i in np.arange(num_edges):
-        edges[i] = arr[i+4]
+    edges = arr[4:]
     
     return STN(num_tp, num_edges, strings, edges)
+
 
 
 def arrayToString(input):
@@ -51,6 +50,6 @@ def arrayToString(input):
         counter += 1
     return s
 
-our_array = stringToArray(user_input)
+our_STN = stringToSTN(user_input)
 #our_string = arrayToString(our_array)
-#print(our_array)
+print(our_STN.get_preds())
