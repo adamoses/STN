@@ -1,8 +1,14 @@
 import numpy as np
+import sys
 from STN import *
 
+
 #will change this so user can choose
-user_input = ("sample.txt")
+if(len(sys.argv)!= 2):
+    print('\n\nUsage: python parser.py input_file.txt\n\n')
+    quit(0)
+else:
+    user_input = sys.argv[1]
 
 def stringToSTN(input):
     stn = open(input, "r")
