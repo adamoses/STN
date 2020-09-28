@@ -9,13 +9,13 @@ class STN():
         Inputs:
         num_tp        -       num of time points (int)
         num_edges     -       num of edges (int)
-        tp_names      -       numpy array of time point names (string array)
+        tp_names      -       string of time point names 
         ord_edges     -       numpy array of strings
-                                fmt = "from_tp cost to_tp"
+                              fmt = "from_tp cost to_tp"
         '''
 
         self.__num_tp = num_tp         
-        self.__num_edges = 0  
+        self.__num_edges = num_edges
         self.__tp_names = tp_names.split(' ')     
         self.__tp_hash = {}          # initilizing empty dictionary
                                      # for STN data structure
@@ -59,18 +59,20 @@ class STN():
         self.__preds[to_tp][from_tp] = cost
 
 
+    def get_num_tp(self):
+        return self.__num_tp
 
+    def get_num_edges(self):
+        return self.__num_edges
 
     def get_succs(self):
         return self.__succs
 
-
-    
     def get_preds(self):
         return self.__preds
 
-
-        
+    def get_names(self):
+        return self.__tp_names
 
     def get_hash(self):
         return self.__tp_hash
@@ -88,7 +90,8 @@ edge7 = 'A1 10 C1'
 edge8 = 'C1 -1 A1'
 
 edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
-testSTN = STN(5, 8, names, edges)
+#print(edges)
+#testSTN = STN(5, 8, names, edges)
 
 #p = testSTN.get_preds()
 #print(p)

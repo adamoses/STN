@@ -27,29 +27,29 @@ def stringToSTN(input):
     strings = arr[3]
 
     edges = arr[4:]
-    
+
     return STN(num_tp, num_edges, strings, edges)
 
 
 
-def arrayToString(input):
-    s = ""
-    counter = 0
-    for x in input:
-        if counter == 0:
-            s += "# KIND OF NETWORK\n"
-        elif counter == 1:
-            s += "# Num Time-Points\n"
-        elif counter == 2:
-            s += "# Num Ordinary Edges\n"
-        elif counter == 3:
-            s += "# Time-Point Names\n"
-        elif counter == 4:
-            s += "# Ordinary Edges\n"
-        s += x + "\n"
-        counter += 1
-    return s
+def to_string(input):
+    string = ''
+    succ = input.get_succs()
+    edges = np.array([])
+    names = input.get_names()
+
+    for i in np.arange(input.get_num_tp()):
+        for key,val in succ[i].items():
+            new_edge = names[i]+' '+str(val)+' '+names[key]
+            edges = np.append(edges, new_edge)
+
+    string += "# KIND OF NETWORK\nSTN\n# Num Time-Points\n"+str(input.get_num_tp())
+    string += "\n# Num Ordinary Edges\n"+str(input.get_num_edges())+"\n"
+    string += "# Time-Point Names\n"+ " ".join(names) +"\n# Ordinary Edges\n"
+    string += '\n'.join(edges)
+
+    return string
 
 our_STN = stringToSTN(user_input)
-#our_string = arrayToString(our_array)
-print(our_STN.get_preds())
+our_string = to_string(our_STN)
+print(our_string)
