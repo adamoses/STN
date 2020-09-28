@@ -6,11 +6,10 @@ https://www.cs.vassar.edu/~hunsberg/cs382/
 
 # Tasks for this week:
 
-## Adam Moses
+## Adam Moses and Daniel Doyon
 -
-## Cameron Flores
 -
-## Daniel Doyon
--
-## Gabor Ptacek
+
+##  Gabor Ptacek and Cameron Flores
+- Bellman-Ford
 -
