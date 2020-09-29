@@ -1,12 +1,21 @@
-from STN import STN
+from stn import STN
 import numpy as np
 
-def pred_to_array(STN):
-    p = STN.get_preds()
-    print(p)
-    #for key, val in p:
-        #print("key = " + key)
-        #print("val = " + val)
+
+#turns successor array of dictionary into 2d array of the form (from_tp, to_tp, edge_val) for easier processing by bellman_ford
+def succ_to_array(STN):
+    succ = STN.get_succs()
+    print(succ)
+    ret_arr = []
+    counter = 0
+    for hash_table in succ:
+        for key in hash_table:
+            temp_arr = [counter]
+            temp_arr.append(key)
+            temp_arr.append(hash_table[key])
+            ret_arr.append(temp_arr)
+        counter += 1
+    print(ret_arr)
 
 #takes in STN and source point, where src is <= # time points - 1
 def bellman_ford(self, src):  
@@ -40,6 +49,7 @@ def bellman_ford(self, src):
 
     self.print(dist)
 
+
 names = 'A0 C0 A1 C1 X'
 
 edge1 = 'X 12 C0'
@@ -52,6 +62,6 @@ edge7 = 'A1 10 C1'
 edge8 = 'C1 -1 A1'
 
 edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
-testSTN = STN(5, 8, names, edges)
+test_stn = STN(5, 8, names, edges)
 
-pred_to_array(testSTN)
+succ_to_array(test_stn)
