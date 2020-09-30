@@ -1,4 +1,4 @@
-from STN import STN
+from stn import STN
 import numpy as np
 from util import *
 
@@ -30,12 +30,21 @@ def dijkstra(STN, src, src_string=False):
 
     return distances
 
-def pred_to_array(STN):
-    p = STN.get_preds()
-    print(p)
-    #for key, val in p:
-        #print("key = " + key)
-        #print("val = " + val)
+
+#turns successor array of dictionary into 2d array of the form (from_tp, to_tp, edge_val) for easier processing by bellman_ford
+def succ_to_array(STN):
+    succ = STN.get_succs()
+    print(succ)
+    ret_arr = []
+    counter = 0
+    for hash_table in succ:
+        for key in hash_table:
+            temp_arr = [counter]
+            temp_arr.append(key)
+            temp_arr.append(hash_table[key])
+            ret_arr.append(temp_arr)
+        counter += 1
+    print(ret_arr)
 
 #takes in STN and source point, where src is <= # time points - 1
 def bellman_ford(self, src):  
@@ -69,6 +78,7 @@ def bellman_ford(self, src):
 
     #self.print(dist)
 
+
 names = 'A0 C0 A1 C1 X'
 
 edge1 = 'X 12 C0'
@@ -92,6 +102,10 @@ e7 = 'C 1 D'
 edges1 = np.array([e1,e2,e3,e4,e5,e6,e7])
 
 edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
+
+test_stn = STN(5, 8, names, edges)
+
+succ_to_array(test_stn)
 testSTN = STN(5, 8, names, edges)
 t1STN = STN(5, 7, name1, edges1)
 
