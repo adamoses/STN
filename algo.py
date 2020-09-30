@@ -1,6 +1,7 @@
 from STN import STN
 import numpy as np
 
+## Arrange edges into a readable array for BellmanFord
 def succ_to_array(STN):
     succ = STN.get_succs()
     # print(succ)
@@ -19,16 +20,18 @@ def succ_to_array(STN):
 #takes in STN and source point, where src is <= # time points - 1
 def BellmanFord(stn, src):  
   
+    succ = succ_to_array(stn)
+    num_tp = stn.get_num_tp()
+    
     # Step 1: Initialize distances from src to all other vertices  
     # as INFINITE  
-    dist = [float("Inf")] * stn.get_num_tp()
+    dist = [float("Inf")] * num_tp
     dist[src] = 0
     
-    succ = succ_to_array(stn)
     # Step 2: Relax all edges |V| - 1 times. A simple shortest  
     # path from src to any other vertex can have at-most |V| - 1  
     # edges  
-    for _ in range(stn.get_num_tp() - 1):  
+    for _ in range(num_tp - 1):  
         # Update dist value and parent index of the adjacent vertices of  
         # the picked vertex. Consider only those vertices which are still in  
         # queue  
