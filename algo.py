@@ -17,36 +17,40 @@ def succ_to_array(STN):
     return ret_arr
 
 #takes in STN and source point, where src is <= # time points - 1
-def BellmanFord(self, src):  
+def BellmanFord(stn, src):  
   
     # Step 1: Initialize distances from src to all other vertices  
     # as INFINITE  
-    dist = [float("Inf")] * self.get_num_tp()
+    dist = [float("Inf")] * stn.get_num_tp()
     dist[src] = 0
     
-  
+    succ = succ_to_array(stn)
     # Step 2: Relax all edges |V| - 1 times. A simple shortest  
     # path from src to any other vertex can have at-most |V| - 1  
     # edges  
-    for _ in range(self.get_num_tp() - 1):  
+    for _ in range(stn.get_num_tp() - 1):  
         # Update dist value and parent index of the adjacent vertices of  
         # the picked vertex. Consider only those vertices which are still in  
         # queue  
-        for u, v, w in succ_to_array(self):  
+        print("Step 2:")
+        for u, v, w in succ:  
+            print(str(dist[u]) + " + " + str(w) + " < " + str(dist[v]))
             if dist[u] != float("Inf") and dist[u] + w < dist[v]:  
                 dist[v] = dist[u] + w  
-  
+                print(dist[v])
+        print(dist)
         # Step 3: check for negative-weight cycles. The above step  
         # guarantees shortest distances if graph doesn't contain  
         # negative weight cycle. If we get a shorter path, then there  
         # is a cycle.  
-  
-        for u, v, w in succ_to_array(self):  
+        print("Step 3:")
+        for u, v, w in succ:  
+            print(str(dist[u]) + " + " + str(w) + " < " + str(dist[v]))
             if dist[u] != float("Inf") and dist[u] + w < dist[v]:  
                 print("Graph contains negative weight cycle") 
                 return
 
-    self.print(dist)
+    print(dist)
 
 names = 'A0 C0 A1 C1 X'
 
@@ -62,4 +66,4 @@ edge8 = 'C1 -1 A1'
 edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
 test_stn = STN(5, 8, names, edges)
 
-BellmanFord(test_stn, test_stn.get_num_tp() - 1)
+BellmanFord(test_stn, 0)
