@@ -2,9 +2,28 @@ from STN import STN
 import numpy as np
 from util import *
 
+def floyd_warshall(STN):
+
+    num_tp = STN.get_num_tp()
+    distanceMatrix = np.zeros(shape=(num_tp, num_tp)) + np.inf
+    successors = STN.get_succs()
+
+    for succ_dict in np.arange(num_tp):
+        for key in successors[succ_dict].keys():
+            distanceMatrix[succ_dict][key] = successors[succ_dict][key]
+
+    for i in np.arange(num_tp):
+        for j in np.arange(num_tp):
+            for k in np.arange(num_tp):
+                distanceMatrix[j][k] = min(distanceMatrix[j][k], 
+                                           distanceMatrix[j][i] + distanceMatrix[i][k])
+
+    return distanceMatrix
+    
+
 def dijkstra(STN, src, src_string=False):
 
-    distances = np.ones(STN.get_num_tp())*np.inf
+    distances = np.zeros(STN.get_num_tp())+np.inf
     successors = STN.get_succs()
     visited = []
     
@@ -96,5 +115,9 @@ testSTN = STN(5, 8, names, edges)
 t1STN = STN(5, 7, name1, edges1)
 
 #pred_to_array(testSTN)
-
-print(dijkstra(t1STN, 'A', src_string=True))
+print(dijkstra(t1STN, 0))
+print(dijkstra(t1STN, 1))
+print(dijkstra(t1STN, 2))
+print(dijkstra(t1STN, 3))
+print(dijkstra(t1STN, 4))
+print(floyd_warshall(t1STN))
