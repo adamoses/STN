@@ -37,7 +37,7 @@ class STN():
 
 
 
-    def __find_tp(self, name):
+    def find_tp(self, name):
 
         for tp in np.arange(self.__num_tp):
             if(self.__tp_hash[tp] == name ):
@@ -51,31 +51,31 @@ class STN():
 
     def __insert_edge(self, edge): #fmt = [from_tp (tp - not the name) cost to_tp (tp - not the name)]:
 
-        from_tp = self.__find_tp(edge[0])
+        from_tp = self.find_tp(edge[0])
         cost = int(edge[1])
-        to_tp = self.__find_tp(edge[2])
+        to_tp = self.find_tp(edge[2])
 
         self.__succs[from_tp][to_tp] = cost
         self.__preds[to_tp][from_tp] = cost
 
 
     def get_num_tp(self):
-        return self.__num_tp
+        return self.__num_tp+0
 
     def get_num_edges(self):
-        return self.__num_edges
+        return self.__num_edges+0
 
     def get_succs(self):
-        return self.__succs
+        return self.__succs.copy()
 
     def get_preds(self):
-        return self.__preds
+        return self.__preds.copy()
 
     def get_names(self):
-        return self.__tp_names
+        return self.__tp_names.copy()
 
     def get_hash(self):
-        return self.__tp_hash
+        return self.__tp_hash.copy()
 
 
 names = 'A0 C0 A1 C1 X'

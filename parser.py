@@ -58,4 +58,4 @@ def to_string(input):
 
 our_STN = stringToSTN(user_input)
 our_string = to_string(our_STN)
-print(our_string)
+
