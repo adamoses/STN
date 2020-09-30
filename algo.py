@@ -1,5 +1,34 @@
 from STN import STN
 import numpy as np
+from util import *
+
+def dijkstra(STN, src, src_string=False):
+
+    distances = np.ones(STN.get_num_tp())*np.inf
+    successors = STN.get_succs()
+    visited = []
+    
+    if src_string:
+        source = STN.find_tp(src)
+    else:
+        source = src
+    
+    distances[source] = 0
+
+    p_queue = PriorityQueue()
+    visited.append(source)
+    p_queue.push(source, distances[source])
+
+    while not p_queue.isEmpty():
+        node = p_queue.pop()
+        visited.append(node)
+        for succ in successors[node].keys():
+            if not succ in visited:
+                distances[succ] = min(distances[succ], distances[node]+successors[node][succ])
+                p_queue.update(succ, distances[succ])
+                
+
+    return distances
 
 def pred_to_array(STN):
     p = STN.get_preds()
@@ -38,7 +67,7 @@ def bellman_ford(self, src):
                 print("Graph contains negative weight cycle") 
                 return
 
-    self.print(dist)
+    #self.print(dist)
 
 names = 'A0 C0 A1 C1 X'
 
@@ -51,7 +80,21 @@ edge6 = 'C0 -1 A0'
 edge7 = 'A1 10 C1'
 edge8 = 'C1 -1 A1'
 
+name1 = 'A B C D E'
+e1 = 'A 2 B'
+e2 = 'B 12 D'
+e3 = 'D 3 A'
+e4 = 'A 4 E'
+e5 = 'E 7 C'
+e6 = 'C 9 E'
+e7 = 'C 1 D'
+
+edges1 = np.array([e1,e2,e3,e4,e5,e6,e7])
+
 edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
 testSTN = STN(5, 8, names, edges)
+t1STN = STN(5, 7, name1, edges1)
 
-pred_to_array(testSTN)
+#pred_to_array(testSTN)
+
+print(dijkstra(t1STN, 'A', src_string=True))
