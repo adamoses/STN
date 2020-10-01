@@ -6,13 +6,16 @@ https://www.cs.vassar.edu/~hunsberg/cs382/
 
 # Tasks for this week:
 
-## Adam Moses and Daniel Doyon
-- Dijkstra's 
--
+## Adam Moses
+- Dijkstra's (sink)
+
+## Daniel Doyon
+- Johnson's Algorithm
 
 ##  Gabor Ptacek
+- STNUs --> STN
 - Naive Algorithm
 
 ##  Cameron Flores
 - Bellman-Ford
-- Test BellmanFord (Cameron)
+- Bellman-Ford (sink)
