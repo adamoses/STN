@@ -72,26 +72,3 @@ class STN():
 
     def get_hash(self):
         return self.__tp_hash.copy()
-
-
-names = 'A0 C0 A1 C1 X'
-
-edge1 = 'X 12 C0'
-edge2 = 'C1 11 C0'
-edge3 = 'C0 -7 X'
-edge4 = 'C0 -1 C1'
-edge5 = 'A0 3 C0'
-edge6 = 'C0 -1 A0'
-edge7 = 'A1 10 C1'
-edge8 = 'C1 -1 A1'
-
-edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
-#print(edges)
-# 1 = A0
-testSTN = STN(5, 8, names, edges)
-
-# print(testSTN.get_succs())
-# print(testSTN.get_preds())
-
-#p = testSTN.get_preds()
-#print(p)

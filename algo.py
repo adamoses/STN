@@ -49,23 +49,6 @@ def dijkstra(STN, src, src_string=False):
 
     return distances
 
-
-## Arrange edges into a readable array for BellmanFord
-def succ_to_array(STN):
-    succ = STN.get_succs()
-    # print(succ)
-    ret_arr = []
-    counter = 0
-    for hash_table in succ:
-        for key in hash_table:
-            temp_arr = [counter]
-            temp_arr.append(key)
-            temp_arr.append(hash_table[key])
-            ret_arr.append(temp_arr)
-        counter += 1
-    # print(ret_arr)
-    return ret_arr
-
 #takes in STN and source point, where src is <= # time points - 1
 def BellmanFord(stn, src):  
 
