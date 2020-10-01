@@ -1,55 +1,33 @@
 from STN import STN
 import numpy as np
 
-## Arrange edges into a readable array for BellmanFord
-def succ_to_array(STN):
-    succ = STN.get_succs()
-    # print(succ)
-    ret_arr = []
-    counter = 0
-    for hash_table in succ:
-        for key in hash_table:
-            temp_arr = [counter]
-            temp_arr.append(key)
-            temp_arr.append(hash_table[key])
-            ret_arr.append(temp_arr)
-        counter += 1
-    # print(ret_arr)
-    return ret_arr
-
-#takes in STN and source point, where src is <= # time points - 1
 def BellmanFord(stn, src):  
   
-    succ = succ_to_array(stn)
+    succ = stn.get_succs()
     num_tp = stn.get_num_tp()
     
     # Step 1: Initialize distances from src to all other vertices  
     # as INFINITE  
-    dist = [float("Inf")] * num_tp
+    dist = [float("Inf")] * (num_tp)
     dist[src] = 0
     
     # Step 2: Relax all edges |V| - 1 times. A simple shortest  
     # path from src to any other vertex can have at-most |V| - 1  
     # edges  
-    for _ in range(num_tp - 1):  
+    # changed from num_tp -1 to num_tp to account for extra source node
+    for u, hash_table in enumerate(succ):
         # Update dist value and parent index of the adjacent vertices of  
         # the picked vertex. Consider only those vertices which are still in  
         # queue  
-        print("Step 2:")
-        for u, v, w in succ:  
-            print(str(dist[u]) + " + " + str(w) + " < " + str(dist[v]))
-            if dist[u] != float("Inf") and dist[u] + w < dist[v]:  
-                dist[v] = dist[u] + w  
-                print(dist[v])
-        print(dist)
+        for key in hash_table:  
+            if dist[u] != float("Inf") and dist[u] + hash_table[key] < dist[key]:  
+                dist[key] = dist[u] + hash_table[key]  
         # Step 3: check for negative-weight cycles. The above step  
         # guarantees shortest distances if graph doesn't contain  
         # negative weight cycle. If we get a shorter path, then there  
         # is a cycle.  
-        print("Step 3:")
-        for u, v, w in succ:  
-            print(str(dist[u]) + " + " + str(w) + " < " + str(dist[v]))
-            if dist[u] != float("Inf") and dist[u] + w < dist[v]:  
+        for key in hash_table:  
+            if dist[u] != float("Inf") and dist[u] + hash_table[key] < dist[key]:  
                 print("Graph contains negative weight cycle") 
                 return
 
