@@ -91,8 +91,11 @@ edge8 = 'C1 -1 A1'
 
 edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
 #print(edges)
-#testSTN = STN(5, 8, names, edges)
+# 1 = A0
+testSTN = STN(5, 8, names, edges)
+
+# print(testSTN.get_succs())
+# print(testSTN.get_preds())
 
 #p = testSTN.get_preds()
 #print(p)
-
