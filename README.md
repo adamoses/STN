@@ -22,3 +22,7 @@ Meetings: Saturdays at 6pm ET
 - Bellman-Ford
 - Bellman-Ford (sink)
 - DPC algorithm
+
+
+## sources
+- https://www.geeksforgeeks.org/bellman-ford-algorithm-dp-23/
