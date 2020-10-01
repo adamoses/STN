@@ -1,4 +1,4 @@
-from stn import STN
+from STN import STN
 import numpy as np
 from util import *
 
@@ -50,13 +50,6 @@ def dijkstra(STN, src, src_string=False):
     return distances
 
 
-#turns successor array of dictionary into 2d array of the form (from_tp, to_tp, edge_val) for easier processing by bellman_ford
-def succ_to_array(STN):
-    succ = STN.get_succs()
-    print(succ)
-from STN import STN
-import numpy as np
-
 ## Arrange edges into a readable array for BellmanFord
 def succ_to_array(STN):
     succ = STN.get_succs()
@@ -75,6 +68,22 @@ def succ_to_array(STN):
 
 #takes in STN and source point, where src is <= # time points - 1
 def BellmanFord(stn, src):  
+
+    ## Arrange edges into a readable array for BellmanFord
+    def succ_to_array(STN):
+        succ = STN.get_succs()
+        # print(succ)
+        ret_arr = []
+        counter = 0
+        for hash_table in succ:
+            for key in hash_table:
+                temp_arr = [counter]
+                temp_arr.append(key)
+                temp_arr.append(hash_table[key])
+                ret_arr.append(temp_arr)
+            counter += 1
+        # print(ret_arr)
+        return ret_arr
   
     succ = succ_to_array(stn)
     num_tp = stn.get_num_tp()
@@ -91,25 +100,25 @@ def BellmanFord(stn, src):
         # Update dist value and parent index of the adjacent vertices of  
         # the picked vertex. Consider only those vertices which are still in  
         # queue  
-        print("Step 2:")
+        #print("Step 2:")
         for u, v, w in succ:  
-            print(str(dist[u]) + " + " + str(w) + " < " + str(dist[v]))
+            #print(str(dist[u]) + " + " + str(w) + " < " + str(dist[v]))
             if dist[u] != float("Inf") and dist[u] + w < dist[v]:  
                 dist[v] = dist[u] + w  
-                print(dist[v])
-        print(dist)
+                #print(dist[v])
+        #print(dist)
         # Step 3: check for negative-weight cycles. The above step  
         # guarantees shortest distances if graph doesn't contain  
         # negative weight cycle. If we get a shorter path, then there  
         # is a cycle.  
-        print("Step 3:")
+        #print("Step 3:")
         for u, v, w in succ:  
-            print(str(dist[u]) + " + " + str(w) + " < " + str(dist[v]))
+            #print(str(dist[u]) + " + " + str(w) + " < " + str(dist[v]))
             if dist[u] != float("Inf") and dist[u] + w < dist[v]:  
                 print("Graph contains negative weight cycle") 
                 return
 
-    print(dist)
+    return(dist)
 
 names = 'A0 C0 A1 C1 X'
 
@@ -136,20 +145,4 @@ edges1 = np.array([e1,e2,e3,e4,e5,e6,e7])
 edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
 
 test_stn = STN(5, 8, names, edges)
-
-succ_to_array(test_stn)
-testSTN = STN(5, 8, names, edges)
-t1STN = STN(5, 7, name1, edges1)
-
-#pred_to_array(testSTN)
-print(dijkstra(t1STN, 0))
-print(dijkstra(t1STN, 1))
-print(dijkstra(t1STN, 2))
-print(dijkstra(t1STN, 3))
-print(dijkstra(t1STN, 4))
-print(floyd_warshall(t1STN))
-
-edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
-test_stn = STN(5, 8, names, edges)
-
 BellmanFord(test_stn, 0)

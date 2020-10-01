@@ -45,10 +45,6 @@ class STN():
 
         return None
 
-
-
-
-
     def __insert_edge(self, edge): #fmt = [from_tp (tp - not the name) cost to_tp (tp - not the name)]:
 
         from_tp = self.find_tp(edge[0])
@@ -72,7 +68,7 @@ class STN():
         return self.__preds.copy()
 
     def get_names(self):
-        return self.__tp_names.copy()
+        return self.__tp_names[:]
 
     def get_hash(self):
         return self.__tp_hash.copy()
