@@ -8,6 +8,7 @@ https://www.cs.vassar.edu/~hunsberg/cs382/
 
 ## Adam Moses
 - Dijkstra's (sink)
+- fwd/bkwd prop
 
 ## Daniel Doyon
 - Johnson's Algorithm
@@ -19,3 +20,4 @@ https://www.cs.vassar.edu/~hunsberg/cs382/
 ##  Cameron Flores
 - Bellman-Ford
 - Bellman-Ford (sink)
+- DPC algorithm
