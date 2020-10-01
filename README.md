@@ -10,7 +10,9 @@ https://www.cs.vassar.edu/~hunsberg/cs382/
 - Dijkstra's 
 -
 
-##  Gabor Ptacek and Cameron Flores
+##  Gabor Ptacek
+- Naive Algorithm
+
+##  Cameron Flores
 - Bellman-Ford
-- predsToArray (Gabor)
 - Test BellmanFord (Cameron)
