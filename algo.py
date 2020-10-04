@@ -1,6 +1,7 @@
 from STN import STN
 import numpy as np
 from util import *
+from queue import PriorityQueue
 
 def floyd_warshall(STN):
 
@@ -9,6 +10,7 @@ def floyd_warshall(STN):
     successors = STN.get_succs()
 
     for succ_dict in np.arange(num_tp):
+        distanceMatrix[succ_dict][succ_dict] = 0
         for key in successors[succ_dict].keys():
             distanceMatrix[succ_dict][key] = successors[succ_dict][key]
 
@@ -21,31 +23,36 @@ def floyd_warshall(STN):
     return distanceMatrix
     
 
-def dijkstra(STN, src, src_string=False):
+def dijkstra(STN, node, string=False, sink=False):
 
     distances = np.zeros(STN.get_num_tp())+np.inf
-    successors = STN.get_succs()
     visited = []
+
+    if sink:
+        nextNodes = STN.get_preds()
+    else: 
+        nextNodes = STN.get_succs()
     
-    if src_string:
-        source = STN.find_tp(src)
+    if string:
+        rnode = STN.find_tp(node)
     else:
-        source = src
+        rnode = node
     
-    distances[source] = 0
+    distances[rnode] = 0
 
     p_queue = PriorityQueue()
-    visited.append(source)
-    p_queue.push(source, distances[source])
+    visited.append(rnode)
+    p_queue.put((distances[rnode], rnode))
 
-    while not p_queue.isEmpty():
-        node = p_queue.pop()
+    while not p_queue.empty():
+        node = p_queue.get()[1]
         visited.append(node)
-        for succ in successors[node].keys():
+        for succ in nextNodes[node].keys():
             if not succ in visited:
-                distances[succ] = min(distances[succ], distances[node]+successors[node][succ])
-                p_queue.update(succ, distances[succ])
-                
+                distances[succ] = min(distances[succ], distances[node]+nextNodes[node][succ])
+                p_queue.put((distances[succ], succ))
+
+    STN.update_distances(distances)            
 
     return distances
 
@@ -128,4 +135,5 @@ edges1 = np.array([e1,e2,e3,e4,e5,e6,e7])
 edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
 
 test_stn = STN(5, 8, names, edges)
-BellmanFord(test_stn, 0)
+tstn = STN(5,7,name1,edges1)
+print(dijkstra(tstn, 'A', string=True))

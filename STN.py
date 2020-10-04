@@ -23,6 +23,8 @@ class STN():
                                      # each index will hold succ dict for 
                                      # each time point
         self.__preds = np.array([])
+        self.__dist_matrix = None
+        self.__dist_mat_updated = False
 
         for i in np.arange(num_tp):
             self.__succs = np.append(self.__succs, {})
@@ -35,7 +37,9 @@ class STN():
             self.__insert_edge(string.split(' '))
 
 
-
+    def update_distances(self, distances):
+        self.__dist_matrix = distances
+        self.__dist_mat_updated = True
 
     def find_tp(self, name):
 
@@ -53,6 +57,7 @@ class STN():
 
         self.__succs[from_tp][to_tp] = cost
         self.__preds[to_tp][from_tp] = cost
+        self.__dist_mat_updated = False
 
 
     def get_num_tp(self):
@@ -72,3 +77,8 @@ class STN():
 
     def get_hash(self):
         return self.__tp_hash.copy()
+
+    def get_dist_mat(self):
+        return self.__dist_matrix.copy()
+
+    
