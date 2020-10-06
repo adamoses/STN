@@ -1,6 +1,7 @@
 import numpy as np
 import sys
 from STN import *
+from algo import *
 
 
 #will change this so user can choose
@@ -56,6 +57,8 @@ def to_string(input):
 
     return string
 
-our_STN = stringToSTN(user_input)
-our_string = to_string(our_STN)
+STN = stringToSTN(user_input)
+STN.update_distances(floyd_warshall(STN))
+STN.insert_tp('K')
 
+print(STN.get_dist_mat())

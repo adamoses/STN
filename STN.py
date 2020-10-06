@@ -23,7 +23,7 @@ class STN():
                                      # each index will hold succ dict for 
                                      # each time point
         self.__preds = np.array([])
-        self.__dist_matrix = None
+        self.__dist_matrix = np.zeros(shape=(self.__num_tp, self.__num_tp)) + np.inf
         self.__dist_mat_updated = False
 
         for i in np.arange(num_tp):
@@ -48,6 +48,22 @@ class STN():
                 return tp
 
         return None
+
+    def insert_tp(self,name):
+        self.__num_tp += 1
+        self.__tp_names = np.append(self.__tp_names, name)
+        self.__tp_hash[self.__num_tp] = name
+        self.__preds = np.append(self.__preds, {})
+        self.__succs = np.append(self.__succs, {})
+
+        dist = self.get_dist_mat()
+        newDist = np.zeros(shape=(self.__num_tp, self.__num_tp)) + np.inf
+
+        mybool = np.logical_not(dist == np.inf)
+
+        newDist[mybool] = dist[mybool]
+        self.update_distances(newDist)
+        self.__dist_mat_updated = False
 
     def __insert_edge(self, edge): #fmt = [from_tp (tp - not the name) cost to_tp (tp - not the name)]:
 
