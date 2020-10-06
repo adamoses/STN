@@ -69,6 +69,9 @@ def dijkstra(STN, node, string=False, sink=False):
             if not succ in visited:
                 distances[succ] = min(distances[succ], distances[node]+nextNodes[node][succ])
                 p_queue.put((distances[succ], succ))
+                if nextNodes[node][succ] < 0:
+                    print('\nDijkstra\'s algorithm can not be used on networks with negative weight edges.\n')
+                    exit(0)
 
     STN.update_distances(distances)            
 
@@ -127,4 +130,22 @@ def BellmanFord(stn, src):
                 return
 
     return(dist)
+
+def prop_fwd_prop_bkwd(STN, edge, string=True):
+    if string:
+        from_tp = STN.find_tp(edge[0])
+        cost = int(edge[1])
+        to_tp = STN.find_tp(edge[2])
+    else:
+        from_tp = edge[0]
+        cost = edge[1]
+        to_tp = edge[2]
+    
+    dist_mat = STN.get_dist_mat()
+
+    if cost < -dist_mat[from_tp][to_tp]:
+        return False
+
+    
+    
 

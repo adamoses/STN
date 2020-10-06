@@ -59,6 +59,3 @@ def to_string(input):
 
 STN = stringToSTN(user_input)
 STN.update_distances(floyd_warshall(STN))
-STN.insert_tp('K')
-
-print(STN.get_dist_mat())

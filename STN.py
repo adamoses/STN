@@ -34,7 +34,7 @@ class STN():
          
         for i in np.arange(num_edges):
             string = ord_edges[i]
-            self.__insert_edge(string.split(' '))
+            self.insert_edge(string.split(' '))
 
 
     def update_distances(self, distances):
@@ -52,7 +52,7 @@ class STN():
     def insert_tp(self,name):
         self.__num_tp += 1
         self.__tp_names = np.append(self.__tp_names, name)
-        self.__tp_hash[self.__num_tp] = name
+        self.__tp_hash[self.__num_tp-1] = name
         self.__preds = np.append(self.__preds, {})
         self.__succs = np.append(self.__succs, {})
 
@@ -65,15 +65,20 @@ class STN():
         self.update_distances(newDist)
         self.__dist_mat_updated = False
 
-    def __insert_edge(self, edge): #fmt = [from_tp (tp - not the name) cost to_tp (tp - not the name)]:
+    def insert_edge(self, edge, string=True):
+        if string:
+            from_tp = self.find_tp(edge[0])
+            cost = int(edge[1])
+            to_tp = self.find_tp(edge[2])
+        else:
+            from_tp = edge[0]
+            cost = edge[1]
+            to_tp = edge[2]
 
-        from_tp = self.find_tp(edge[0])
-        cost = int(edge[1])
-        to_tp = self.find_tp(edge[2])
-
-        self.__succs[from_tp][to_tp] = cost
-        self.__preds[to_tp][from_tp] = cost
-        self.__dist_mat_updated = False
+        if (not self.__succs[from_tp].get(to_tp)) or (self.__succs[from_tp][to_tp] > cost):
+            self.__succs[from_tp][to_tp] = cost
+            self.__preds[to_tp][from_tp] = cost
+            self.__dist_mat_updated = False
 
 
     def get_num_tp(self):
