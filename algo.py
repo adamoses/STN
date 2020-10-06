@@ -20,7 +20,25 @@ def floyd_warshall(STN):
                 distanceMatrix[j][k] = min(distanceMatrix[j][k], 
                                            distanceMatrix[j][i] + distanceMatrix[i][k])
 
+
     return distanceMatrix
+
+# 'from cost to'
+# --> ['from', 'cost', 'to]
+
+def naive(STN, newEdge):
+    dist = STN.get_dist_mat()
+    num_tp = STN.get_num_tp()
+    edge = newEdge.split(' ')
+    from_tp = STN.find_tp(edge[0])
+    cost = int(edge[1])
+    to_tp = STN.find_tp(edge[2])
+
+    for u in np.arange(num_tp):
+        for v in np.arange(num_tp):
+            dist[u][v] = min(dist[u][v], dist[u][from_tp]+cost+dist[to_tp][v])
+
+    STN.update_distances(dist)
     
 
 def dijkstra(STN, node, string=False, sink=False):

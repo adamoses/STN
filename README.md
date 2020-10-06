@@ -8,7 +8,7 @@ Meetings: Saturdays at 6pm ET
 # Tasks for this week:
 
 ## Adam Moses
-- Dijkstra's (sink)
+- New Time points
 - fwd/bkwd prop
 
 ## Daniel Doyon
