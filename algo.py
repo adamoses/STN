@@ -200,7 +200,6 @@ def prop_fwd_prop_bkwd(STN, edge, string=True):
                     if dist_mat[e][x] + dist_mat[x][w] < dist_mat[e][w]:
                         dist_mat[e][w] = dist_mat[e][x] + dist_mat[x][w]
                         to_do.append(e)
-                        changed.append(e)
     return dist_mat
     
     
