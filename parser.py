@@ -3,7 +3,7 @@ from STN import *
 from algo import *
 
 
-def stringToSTN(input):
+def STN_parser(input):
     stn = open(input, "r")
     stn_string = stn.read()
     stn.close()

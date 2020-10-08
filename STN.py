@@ -1,8 +1,9 @@
 import numpy as np
+import copy
 
 class STN():
 
-    def __init__(self, num_tp, num_edges, tp_names, ord_edges):
+    def __init__(self, num_tp, num_edges, tp_names, ord_edges, name_list=False, edge_list=False):
 
         ''' 
         Constructor for STN
@@ -16,7 +17,13 @@ class STN():
 
         self.__num_tp = num_tp         
         self.__num_edges = num_edges
-        self.__tp_names = tp_names.split(' ')     
+        if not name_list and (not tp_names == ''):
+            self.__tp_names = tp_names.split(' ')  
+        elif not tp_names == '':
+            self.__tp_names = tp_names
+        else:
+            self.__tp_names = None   
+
         self.__tp_hash = {}          # initilizing empty dictionary
                                      # for STN data structure
         self.__succs = np.array([])  # initializing empty array
@@ -25,6 +32,7 @@ class STN():
         self.__preds = np.array([])
         self.__dist_matrix = np.zeros(shape=(self.__num_tp, self.__num_tp)) + np.inf
         self.__dist_mat_updated = False
+        self.__ordered_edges = []
 
         for i in np.arange(num_tp):
             self.__succs = np.append(self.__succs, {})
@@ -34,7 +42,10 @@ class STN():
          
         for i in np.arange(num_edges):
             string = ord_edges[i]
-            self.insert_edge(string.split(' '))
+            if not edge_list:
+                self.insert_edge(string.split(' '))
+            else: 
+                self.insert_edge(string)
 
 
     def update_distances(self, distances):
@@ -47,11 +58,14 @@ class STN():
     def update_preds(self, predescessors):
         self.__preds = predescessors
 
-    def find_tp(self, name):
+    def find_tp(self, name, string=True):
 
-        for tp in np.arange(self.__num_tp):
-            if(self.__tp_hash[tp] == name ):
-                return tp
+        if string:
+            for tp in np.arange(self.__num_tp):
+                if(self.__tp_hash[tp] == name ):
+                    return tp
+        else:
+            return self.__tp_hash[tp]
 
         return None
 
@@ -85,6 +99,10 @@ class STN():
             self.__succs[from_tp][to_tp] = cost
             self.__preds[to_tp][from_tp] = cost
             self.__dist_mat_updated = False
+            if string:
+                self.__ordered_edges.append(edge)
+            else:
+                self.__ordered_edges.append([self.find_tp(from_tp, string=False),str(cost),self.find_tp(to_tp, string=False)])
 
 
     def get_num_tp(self):
@@ -93,22 +111,28 @@ class STN():
     def get_num_edges(self):
         return self.__num_edges+0
 
+    def get_ordered_edges(self):
+        return copy.deepcopy(self.__ordered_edges)
+
     def get_succs(self):
-        return self.__succs.copy()
+        return copy.deepcopy(self.__succs)
 
     def get_preds(self):
-        return self.__preds.copy()
+        return copy.deepcopy(self.__preds)
 
     def get_names(self):
-        return self.__tp_names[:]
+        return self.__tp_names.copy()
 
     def get_hash(self):
         return self.__tp_hash.copy()
 
     def get_dist_mat(self):
-        return self.__dist_matrix.copy()
+        return copy.deepcopy(self.__dist_matrix)
 
     def get_dist_mat_upd(self):
         return self.__dist_mat_updated
+
+    def copy(self):
+        return STN(self.__num_tp, self.__num_edges, self.__tp_names.copy(), self.__ordered_edges.copy(), name_list=True, edge_list=True)
 
     

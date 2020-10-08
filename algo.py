@@ -148,7 +148,7 @@ def prop_fwd_prop_bkwd(STN, edge, string=True):
     successors = STN.get_succs()
     predecessors = STN.get_preds()
 
-    if successors[x].get(y) and dist_mat[x][y] <= delta:
+    if dist_mat[x][y] <= delta:
         return dist_mat
 
     successors[x][y] = delta
@@ -177,29 +177,30 @@ def prop_fwd_prop_bkwd(STN, edge, string=True):
                     changed.append(w)
                     to_do.append(w)
 
+
     for w in changed:
-        for l in changed:
 
-            encountered = [l]
-            to_do = [l]
+        encountered = [x]
+        to_do = [x]
 
-            while to_do:
-                f = to_do[0]
-                to_do.remove(f)
+        while to_do:
+            f = to_do[0]
+            to_do.remove(f)
 
-                f_preds = predecessors[f]
+            f_preds = predecessors[f]
 
-                for e in f_preds.keys():
+            for e in f_preds.keys():
 
-                    a = f_preds[e]
+                a = f_preds[e]
 
-                    if (not e in encountered) and (dist_mat[e][l] == a + dist_mat[f][l]):
+                if (not e in encountered) and (dist_mat[e][x] == a + dist_mat[f][x]):
 
-                        encountered.append(e)
-                        if dist_mat[e][l] + dist_mat[l][w] < dist_mat[e][w]:
-                            dist_mat[e][w] = dist_mat[e][l] + dist_mat[l][w]
-                            to_do.append(w)
-
+                    encountered.append(e)
+                    
+                    if dist_mat[e][x] + dist_mat[x][w] < dist_mat[e][w]:
+                        dist_mat[e][w] = dist_mat[e][x] + dist_mat[x][w]
+                        to_do.append(e)
+                        changed.append(e)
     return dist_mat
     
     
