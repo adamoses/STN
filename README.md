@@ -23,6 +23,12 @@ Meetings: Saturdays at 6pm ET
 - Bellman-Ford (sink)
 - DPC algorithm
 
+## Documentation
+
+- Each file should have a header with methods
+- Comments for each function with inputs - outputs, what it does, what it returns, assumptions it makes
+        Contracts
+- Elsewise: general comments for code readability
 
 ## sources
 - https://www.geeksforgeeks.org/bellman-ford-algorithm-dp-23/
