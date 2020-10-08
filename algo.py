@@ -1,6 +1,10 @@
 from STN import STN
 import numpy as np
 
+## Accepts sink and source nodes
+## Sink nodes edge: 'node 0 node'
+## Source: 'node 0 first_node'
+
 def BellmanFord(stn, src):  
   
     succ = stn.get_succs()
@@ -48,3 +52,26 @@ edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
 test_stn = STN(5, 8, names, edges)
 
 BellmanFord(test_stn, 0)
+
+#testing with an extra source node
+names_extra_source = 'S A0 C0 A1 C1 X'
+
+edge0 = 'S 0 A0'
+
+edges_extra_source = np.array([edge0, edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
+test_stn_extra_source = STN(6, 9, names_extra_source, edges_extra_source)
+
+BellmanFord(test_stn_extra_source, 0)
+
+#testing with an extra sink node
+names_sink = 'A0 C0 A1 C1 X S'
+
+edge9 = 'S 0 S'
+
+edges_sink = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8, edge9])
+test_stn_sink = STN(6, 9, names_sink, edges_sink)
+
+BellmanFord(test_stn_sink, 0)
+
+# def DPC(stn, src):
+
