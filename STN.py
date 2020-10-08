@@ -41,6 +41,12 @@ class STN():
         self.__dist_matrix = distances
         self.__dist_mat_updated = True
 
+    def update_succs(self, succsessors):
+        self.__succs = succsessors
+
+    def update_preds(self, predescessors):
+        self.__preds = predescessors
+
     def find_tp(self, name):
 
         for tp in np.arange(self.__num_tp):
@@ -101,5 +107,8 @@ class STN():
 
     def get_dist_mat(self):
         return self.__dist_matrix.copy()
+
+    def get_dist_mat_upd(self):
+        return self.__dist_mat_updated
 
     

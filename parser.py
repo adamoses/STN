@@ -1,15 +1,7 @@
 import numpy as np
-import sys
 from STN import *
 from algo import *
 
-
-#will change this so user can choose
-if(len(sys.argv)!= 2):
-    print('\n\nUsage: python parser.py input_file.txt\n\n')
-    quit(0)
-else:
-    user_input = sys.argv[1]
 
 def stringToSTN(input):
     stn = open(input, "r")
@@ -57,5 +49,3 @@ def to_string(input):
 
     return string
 
-STN = stringToSTN(user_input)
-STN.update_distances(floyd_warshall(STN))

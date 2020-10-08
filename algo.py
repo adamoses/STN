@@ -1,7 +1,7 @@
 from STN import STN
 import numpy as np
 from util import *
-from queue import PriorityQueue
+from queue import *
 
 def floyd_warshall(STN):
 
@@ -133,19 +133,74 @@ def BellmanFord(stn, src):
 
 def prop_fwd_prop_bkwd(STN, edge, string=True):
     if string:
-        from_tp = STN.find_tp(edge[0])
-        cost = int(edge[1])
-        to_tp = STN.find_tp(edge[2])
+        x = STN.find_tp(edge[0])
+        delta = int(edge[1])
+        y = STN.find_tp(edge[2])
     else:
-        from_tp = edge[0]
-        cost = edge[1]
-        to_tp = edge[2]
+        x = edge[0]
+        delta = edge[1]
+        y = edge[2]
+    
+    if not STN.get_dist_mat_upd():
+        print('\nDistance Matrix Must be Updated to run prop_fwd_prop_bkwd()\n')
     
     dist_mat = STN.get_dist_mat()
+    successors = STN.get_succs()
+    predecessors = STN.get_preds()
 
-    if cost < -dist_mat[from_tp][to_tp]:
+    if successors[x].get(y) and dist_mat[x][y] <= delta:
+        return dist_mat
+
+    successors[x][y] = delta
+    predecessors[y][x] = delta
+    dist_mat[x][y] = delta
+
+    encountered = [y]
+    changed = [y]
+    to_do = [y]
+
+    if delta < -dist_mat[y][x]:
         return False
 
+    while to_do:
+        v = to_do[0]
+        to_do.remove(v)
+        v_succs = successors[v]
+
+        for w in v_succs.keys():
+            d = v_succs[w]
+            if (not w in encountered) and (dist_mat[y][w] == d + dist_mat[y][v]):
+                encountered.append(w)
+
+                if delta+dist_mat[y][w] < dist_mat[x][w]:
+                    dist_mat[x][w] = delta+dist_mat[y][w]
+                    changed.append(w)
+                    to_do.append(w)
+
+    for w in changed:
+        for l in changed:
+
+            encountered = [l]
+            to_do = [l]
+
+            while to_do:
+                f = to_do[0]
+                to_do.remove(f)
+
+                f_preds = predecessors[f]
+
+                for e in f_preds.keys():
+
+                    a = f_preds[e]
+
+                    if (not e in encountered) and (dist_mat[e][l] == a + dist_mat[f][l]):
+
+                        encountered.append(e)
+                        if dist_mat[e][l] + dist_mat[l][w] < dist_mat[e][w]:
+                            dist_mat[e][w] = dist_mat[e][l] + dist_mat[l][w]
+                            to_do.append(w)
+
+    return dist_mat
     
     
 
