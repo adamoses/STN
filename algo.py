@@ -26,7 +26,7 @@ def floyd_warshall(STN):
 # 'from cost to'
 # --> ['from', 'cost', 'to]
 
-def naive(STN, newEdge):
+def naive_update_distances(STN, newEdge):
     dist = STN.get_dist_mat()
     num_tp = STN.get_num_tp()
     edge = newEdge.split(' ')
