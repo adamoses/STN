@@ -1,7 +1,36 @@
 from STN import STN
 import numpy as np
-from util import *
 from queue import *
+
+####################################################################################
+# algo.py
+# This file contains algorithms to be run on STN objects
+#
+# floyd_warshall()         - runs Floyd Warshall's algorithm
+#
+# naive_update_distances() -
+#
+# dijkstra()               - runs Dijkstra's algorithm
+#
+# bellman_ford()           - runs Bellman Ford's algorithm
+#
+# prop_fwd_prop_bkwd()     - forward and then backward propagates new edge to update
+#                            distance matrix
+#
+# none of the methods called in this file make any changes to the STN object which they are passed
+#
+# this file depends on numpy and queue
+#
+####################################################################################
+
+
+####################################################################################
+# - floyd_warshall(STN) :
+#
+#           STN - an STN object
+#
+#       Returns: a fully computed distance matrix
+####################################################################################
 
 def floyd_warshall(STN):
 
@@ -23,8 +52,16 @@ def floyd_warshall(STN):
 
     return distanceMatrix
 
-# 'from cost to'
-# --> ['from', 'cost', 'to]
+
+####################################################################################
+# - naive_update_distances(STN, newEdge) :
+#
+#           STN - an STN object
+#
+#           newEdge - ...
+#
+#       Returns: ...
+####################################################################################
 
 def naive_update_distances(STN, newEdge):
     dist = STN.get_dist_mat()
@@ -38,8 +75,25 @@ def naive_update_distances(STN, newEdge):
         for v in np.arange(num_tp):
             dist[u][v] = min(dist[u][v], dist[u][from_tp]+cost+dist[to_tp][v])
 
-    STN.update_distances(dist)
-    
+    return dist
+
+
+####################################################################################
+# - dijkstra(STN, node, string=False, sink=False) :
+#
+#           STN - an STN object
+#
+#           node - a string representing the node from which to calculate distances
+#
+#           string - a bool stating whether the node is specified using a string ('A') (string=True)
+#                    or with the int that represents the time point (0) (string=False)
+#
+#           sink - a bool indicating whether to calculate the distances from the given
+#                  node to all the others (sink=False) or to the given node from every other (sink=True)
+#
+#       Returns: an array describing the distance between the source (or sink) node to each other node
+#                such that dijkstra(STN, 0)[i] equals the distance from node 0 to node i
+####################################################################################
 
 def dijkstra(STN, node, string=False, sink=False):
 
@@ -71,14 +125,12 @@ def dijkstra(STN, node, string=False, sink=False):
                 p_queue.put((distances[succ], succ))
                 if nextNodes[node][succ] < 0:
                     print('\nDijkstra\'s algorithm can not be used on networks with negative weight edges.\n')
-                    exit(0)
-
-    STN.update_distances(distances)            
+                    exit(0)         
 
     return distances
 
 #takes in STN and source point, where src is <= # time points - 1
-def BellmanFord(stn, src):  
+def bellman_ford(stn, src):  
 
     ## Arrange edges into a readable array for BellmanFord
     def succ_to_array(STN):

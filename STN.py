@@ -16,6 +16,8 @@ import copy
 #  [np.matrix(shape=(num_tp, num_tp))] - a distance matrix
 #  [bool]                              - a flag to indicate if the distance matrix is updated
 #
+#  This file depends on numpy and copy
+#
 ####################################################################################
 
 class STN():
