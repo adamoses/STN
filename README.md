@@ -15,8 +15,7 @@ Meetings: Saturdays at 6pm ET
 - Johnson's Algorithm
 
 ##  Gabor Ptacek
-- STNUs --> STN
-- Naive Algorithm
+- Ramalingam99 alg
 
 ##  Cameron Flores
 - Bellman-Ford
