@@ -6,7 +6,7 @@ from algo import *
 # - stn_parser(input) :
 #
 #           input - an standardized text input of an STN of the form:
-#                       # KING OF NETWORK
+#                       # KIND OF NETWORK
 #                       STN
 #                       # Num Time-Points
 #                       (number of time points, eg. 5)
