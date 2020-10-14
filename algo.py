@@ -58,9 +58,10 @@ def floyd_warshall(STN):
 #
 #           STN - an STN object
 #
-#           newEdge - ...
+#           newEdge - a string representing an edge 
 #
-#       Returns: ...
+#       Returns: an updated distance matrix after checking if adding the new edge creates a
+#                   new shortest distance between each pair of two nodes
 ####################################################################################
 
 def naive_update_distances(STN, newEdge):

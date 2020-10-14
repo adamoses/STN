@@ -2,8 +2,26 @@ import numpy as np
 from STN import *
 from algo import *
 
+####################################################################################
+# - stn_parser(input) :
+#
+#           input - an standardized text input of an STN of the form:
+#                       # KING OF NETWORK
+#                       STN
+#                       # Num Time-Points
+#                       (number of time points, eg. 5)
+#                       # Num Ordinary Edges
+#                       (number of ordinary edges, eg. 8)
+#                       # Time-Point Names
+#                       (a single line of the names of the time-points, eg. A0 C0 A1 C1 X)
+#                       # Ordinary Edges
+#                       (one or more lines representing the edges. These edges are represented as
+#                           "from_time_point value_of_edge to_time_point", eg. X 12 C0)
+#   
+#       Returns: an stn object with all the values from the text file
+####################################################################################
 
-def STN_parser(input):
+def stn_parser(input):
     stn = open(input, "r")
     stn_string = stn.read()
     stn.close()
