@@ -32,7 +32,7 @@ def prop_test(file):
     fw2 = floyd_warshall(STN2)
     return np.all(prop_fwd_prop_bkwd(STN1, edge) == fw2)
 
-def test_sample_stns():
+def test_all_sample_stns():
     while(True):
         user_input = input("\nEnter algorithm to test (case sensitive):\n\nfloyd_warshall\nnaive_update_distances\ndijkstra\nbellman_ford\ndpc\nprop\nexit\n")
         if user_input == "exit":
@@ -49,6 +49,28 @@ def test_sample_stns():
                     prop_test(file)
                 else:
                     print("Error, try again!")
+
+def test_sample_stns():
+    while(True):
+        user_input0 = input("\nEnter algorithm to test (case sensitive):\n\nfloyd_warshall\nnaive_update_distances\ndijkstra\nbellman_ford\ndpc\nprop\nexit\n")
+        if user_input0 == "exit":
+            print("\nExiting...")
+            break
+        else:
+            print("\nRunning " + user_input0 +":")
+            for file in os.listdir(directory):
+                print(file)
+            user_input1 = input("\n Pick an stn:\n")
+        print("\n")
+        if user_input0 == 'bellman_ford':
+            bellman_ford_test(user_input1)
+        elif user_input0 == 'dpc':
+            dpc_test(user_input1)
+        elif user_input0 == 'prop':
+            prop_test(user_input1)
+        else:
+            print("Error, try again!")
+        
 
 test_sample_stns()
 
