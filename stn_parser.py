@@ -4,16 +4,17 @@ from STN import *
 
 
 #will change this so user can choose
-if(len(sys.argv)!= 2):
-    print('\n\nUsage: python parser.py input_file.txt\n\n')
-    quit(0)
-else:
-    user_input = sys.argv[1]
+# if(len(sys.argv)!= 2):
+#     print('\n\nUsage: python parser.py input_file.txt\n\n')
+#     quit(0)
+# else:
+#     user_input = sys.argv[1]
 
 def stringToSTN(input):
-    stn = open(input, "r")
-    stn_string = stn.read()
-    stn.close()
+    path = "C:\\Users\\Cameron\\Desktop\\STN\\STN\\sample_STNs\\" + input
+    
+    with open(path, "r") as f:
+        stn_string = f.read()
     
     lines_list = stn_string.splitlines()
     
@@ -56,6 +57,6 @@ def to_string(input):
 
     return string
 
-our_STN = stringToSTN(user_input)
-our_string = to_string(our_STN)
-print(our_string)
+# our_STN = stringToSTN(user_input)
+# our_string = to_string(our_STN)
+# print(our_string)

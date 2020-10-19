@@ -1,11 +1,144 @@
 from STN import STN
 import numpy as np
+from queue import *
+
+####################################################################################
+# algo.py
+# This file contains algorithms to be run on STN objects
+#
+# floyd_warshall()         - runs Floyd Warshall's algorithm
+#
+# naive_update_distances() -
+#
+# dijkstra()               - runs Dijkstra's algorithm
+#
+# bellman_ford()           - runs Bellman Ford's algorithm
+#
+# dpc()                    - runs the Directed Path Consistency search
+
+# prop_fwd_prop_bkwd()     - forward and then backward propagates new edge to update
+#                            distance matrix
+#
+# none of the methods called in this file make any changes to the STN object which they are passed
+#
+# this file depends on numpy and queue
+#
+####################################################################################
+
+
+####################################################################################
+# - floyd_warshall(STN) :
+#
+#           STN - an STN object
+#
+#       Returns: a fully computed distance matrix
+####################################################################################
+
+def floyd_warshall(STN):
+
+    num_tp = STN.get_num_tp()
+    distanceMatrix = np.zeros(shape=(num_tp, num_tp)) + np.inf
+    successors = STN.get_succs()
+
+    for succ_dict in np.arange(num_tp):
+        distanceMatrix[succ_dict][succ_dict] = 0
+        for key in successors[succ_dict].keys():
+            distanceMatrix[succ_dict][key] = successors[succ_dict][key]
+
+    for i in np.arange(num_tp):
+        for j in np.arange(num_tp):
+            for k in np.arange(num_tp):
+                distanceMatrix[j][k] = min(distanceMatrix[j][k], 
+                                           distanceMatrix[j][i] + distanceMatrix[i][k])
+
+
+    return distanceMatrix
+
+
+####################################################################################
+# - naive_update_distances(STN, newEdge) :
+#
+#           STN - an STN object
+#
+#           newEdge - a string representing an edge 
+#
+#       Returns: an updated distance matrix after checking if adding the new edge creates a
+#                   new shortest distance between each pair of two nodes
+####################################################################################
+
+def naive_update_distances(STN, newEdge):
+    dist = STN.get_dist_mat()
+    num_tp = STN.get_num_tp()
+    edge = newEdge.split(' ')
+    from_tp = STN.find_tp(edge[0])
+    cost = int(edge[1])
+    to_tp = STN.find_tp(edge[2])
+
+    for u in np.arange(num_tp):
+        for v in np.arange(num_tp):
+            dist[u][v] = min(dist[u][v], dist[u][from_tp]+cost+dist[to_tp][v])
+
+    return dist
+
+
+####################################################################################
+# - dijkstra(STN, node, string=False, sink=False) :
+#
+#           STN - an STN object
+#
+#           node - a string representing the node from which to calculate distances
+#
+#           string - a bool stating whether the node is specified using a string ('A') (string=True)
+#                    or with the int that represents the time point (0) (string=False)
+#
+#           sink - a bool indicating whether to calculate the distances from the given
+#                  node to all the others (sink=False) or to the given node from every other (sink=True)
+#
+#       Returns: an array describing the distance between the source (or sink) node to each other node
+#                such that dijkstra(STN, 0)[i] equals the distance from node 0 to node i
+####################################################################################
+
+def dijkstra(STN, node, string=False, sink=False):
+
+    distances = np.zeros(STN.get_num_tp())+np.inf
+    visited = []
+
+    if sink:
+        nextNodes = STN.get_preds()
+    else: 
+        nextNodes = STN.get_succs()
+    
+    if string:
+        rnode = STN.find_tp(node)
+    else:
+        rnode = node
+    
+    distances[rnode] = 0
+
+    p_queue = PriorityQueue()
+    visited.append(rnode)
+    p_queue.put((distances[rnode], rnode))
+
+    while not p_queue.empty():
+        node = p_queue.get()[1]
+        visited.append(node)
+        for succ in nextNodes[node].keys():
+            if not succ in visited:
+                distances[succ] = min(distances[succ], distances[node]+nextNodes[node][succ])
+                p_queue.put((distances[succ], succ))
+                if nextNodes[node][succ] < 0:
+                    print('\nDijkstra\'s algorithm can not be used on networks with negative weight edges.\n')
+                    exit(0)         
+
+    return distances
 
 ## Accepts sink and source nodes
 ## Sink nodes edge: 'node 0 node'
 ## Source: 'node 0 first_node'
 
-def BellmanFord(stn, src):  
+
+
+def bellman_ford(stn, src):  
   
     succ = stn.get_succs()
     num_tp = stn.get_num_tp()
@@ -37,21 +170,16 @@ def BellmanFord(stn, src):
 
     print(dist)
 
-names = 'A0 C0 A1 C1 X'
 
-edge1 = 'X 12 C0'
-edge2 = 'C1 11 C0'
-edge3 = 'C0 -7 X'
-edge4 = 'C0 -1 C1'
-edge5 = 'A0 3 C0'
-edge6 = 'C0 -1 A0'
-edge7 = 'A1 10 C1'
-edge8 = 'C1 -1 A1'
-
-edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
-test_stn = STN(5, 8, names, edges)
-
-BellmanFord(test_stn, 0)
+####################################################################################
+# - dpc(STN, node_ordering) :
+#
+#           stn - an STN object
+#
+#           node_ordering - an array of ints representing the time points of the given stn
+#
+#       Returns: False if there is a negative weight cycle and true otherwise
+####################################################################################
 
 # For testing random node_orderings
 # import random
@@ -59,7 +187,7 @@ BellmanFord(test_stn, 0)
 # also takes in node ordering input
 # consistency check (test on consistent and non-consistent STN)
 # node ordering is an array of numbers representing the time points of the given STN
-def DPC(stn, node_ordering):
+def dpc(stn, node_ordering):
     succs = stn.get_succs()
     preds = stn.get_preds()
     # num_tp = stn.get_num_tp()
@@ -89,32 +217,74 @@ def DPC(stn, node_ordering):
     print("DPC: \n", dist)
     return True
 
-names = 'A0 C0 A1 C1 X'
+def prop_fwd_prop_bkwd(STN, edge, string=True):
+    if string:
+        x = STN.find_tp(edge[0])
+        delta = int(edge[1])
+        y = STN.find_tp(edge[2])
+    else:
+        x = edge[0]
+        delta = edge[1]
+        y = edge[2]
+    
+    if not STN.get_dist_mat_upd():
+        print('\nDistance Matrix Must be Updated to run prop_fwd_prop_bkwd()\n')
+    
+    dist_mat = STN.get_dist_mat()
+    successors = STN.get_succs()
+    predecessors = STN.get_preds()
 
-edge1 = 'X 12 C0'
-edge2 = 'C1 11 C0'
-edge3 = 'C0 -7 X'
-edge4 = 'C0 -1 C1'
-edge5 = 'A0 3 C0'
-edge6 = 'C0 -1 A0'
-edge7 = 'A1 10 C1'
-edge8 = 'C1 -1 A1'
+    if dist_mat[x][y] <= delta:
+        return dist_mat
 
-edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
-test_stn = STN(5, 8, names, edges)
+    successors[x][y] = delta
+    predecessors[y][x] = delta
+    dist_mat[x][y] = delta
 
-DPC(test_stn)
+    encountered = [y]
+    changed = [y]
+    to_do = [y]
 
-edge1 = 'X -12 C0'
-edge2 = 'C1 -11 C0'
-edge3 = 'C0 -7 X'
-edge4 = 'C0 -1 C1'
-edge5 = 'A0 -3 C0'
-edge6 = 'C0 -1 A0'
-edge7 = 'A1 -10 C1'
-edge8 = 'C1 -1 A1'
+    if delta < -dist_mat[y][x]:
+        return False
 
-edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
-test_stn = STN(5, 8, names, edges)
-DPC(test_stn)
+    while to_do:
+        v = to_do[0]
+        to_do.remove(v)
+        v_succs = successors[v]
 
+        for w in v_succs.keys():
+            d = v_succs[w]
+            if (not w in encountered) and (dist_mat[y][w] == d + dist_mat[y][v]):
+                encountered.append(w)
+
+                if delta+dist_mat[y][w] < dist_mat[x][w]:
+                    dist_mat[x][w] = delta+dist_mat[y][w]
+                    changed.append(w)
+                    to_do.append(w)
+
+
+    for w in changed:
+
+        encountered = [x]
+        to_do = [x]
+
+        while to_do:
+            f = to_do[0]
+            to_do.remove(f)
+
+            f_preds = predecessors[f]
+
+            for e in f_preds.keys():
+
+                a = f_preds[e]
+
+                if (not e in encountered) and (dist_mat[e][x] == a + dist_mat[f][x]):
+
+                    encountered.append(e)
+                    
+                    if dist_mat[e][x] + dist_mat[x][w] < dist_mat[e][w]:
+                        dist_mat[e][w] = dist_mat[e][x] + dist_mat[x][w]
+                        to_do.append(e)
+    return dist_mat
+    
