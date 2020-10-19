@@ -5,6 +5,8 @@ from algo import *
 from stn_parser import *
 import os
 
+## May need to update the directory string for your computer!
+## Note double slashes are needed
 directory = 'C:\\Users\\Cameron\\Desktop\\STN\\STN\\sample_STNs'
 user_input = ""
 

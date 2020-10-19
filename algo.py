@@ -136,7 +136,15 @@ def dijkstra(STN, node, string=False, sink=False):
 ## Sink nodes edge: 'node 0 node'
 ## Source: 'node 0 first_node'
 
-
+####################################################################################
+# - bellman_ford(stn, src) :
+#
+#           stn - an STN object
+#
+#           src - integer representing the time point being used as source node
+#
+#       Returns: distance array
+####################################################################################
 
 def bellman_ford(stn, src):  
   
