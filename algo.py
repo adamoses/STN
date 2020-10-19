@@ -214,7 +214,8 @@ def dpc(stn, node_ordering):
                             print("Graph contains negative weight cycle") 
                             print(dist)
                             return False
-    print("DPC: \n", dist)
+    # print("DPC: \n", dist)
+    print ("Consistent!")
     return True
 
 def prop_fwd_prop_bkwd(STN, edge, string=True):

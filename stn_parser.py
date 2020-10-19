@@ -12,7 +12,7 @@ from STN import *
 
 def stringToSTN(input):
     path = "C:\\Users\\Cameron\\Desktop\\STN\\STN\\sample_STNs\\" + input
-    
+
     with open(path, "r") as f:
         stn_string = f.read()
     
@@ -56,7 +56,3 @@ def to_string(input):
     string += '\n'.join(edges)
 
     return string
-
-# our_STN = stringToSTN(user_input)
-# our_string = to_string(our_STN)
-# print(our_string)
