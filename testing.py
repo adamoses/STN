@@ -57,11 +57,10 @@ def test_sample_stns():
             print("\nExiting...")
             break
         else:
-            print("\nRunning " + user_input0 +":")
+            print("\nRunning " + user_input0 +":\nPick an stn:\n")
             for file in os.listdir(directory):
                 print(file)
-            user_input1 = input("\n Pick an stn:\n")
-        print("\n")
+            user_input1 = input("\n")
         if user_input0 == 'bellman_ford':
             bellman_ford_test(user_input1)
         elif user_input0 == 'dpc':
@@ -71,8 +70,11 @@ def test_sample_stns():
         else:
             print("Error, try again!")
         
-
-test_sample_stns()
+user_input = input("\n\'one\' or \'all\' sample stns\n")
+if user_input == 'one':
+    test_sample_stns()
+else:
+    test_all_sample_stns()
 
 
 

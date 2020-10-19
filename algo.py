@@ -212,7 +212,7 @@ def dpc(stn, node_ordering):
                         # check for negative cycle
                         if dist[i][j] != float("Inf") and dist[j][i] != float("Inf") and dist[i][j] + dist[j][i] < 0:
                             print("Graph contains negative weight cycle") 
-                            print(dist)
+                            # print(dist)
                             return False
     # print("DPC: \n", dist)
     print ("Consistent!")
