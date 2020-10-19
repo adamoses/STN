@@ -8,6 +8,14 @@ import os
 directory = 'C:\\Users\\Cameron\\Desktop\\STN\\STN\\sample_STNs'
 user_input = ""
 
+def floyd_warshall_test(file):
+    stn = stringToSTN(file)
+    floyd_warshall(stn)
+
+def dijkstra_test(file):
+    stn = stringToSTN(file)
+    dijkstra(stn, 0, False, False)
+
 def bellman_ford_test(file):
     stn = stringToSTN(file)
     bellman_ford(stn, 0)
@@ -61,7 +69,12 @@ def test_sample_stns():
             for file in os.listdir(directory):
                 print(file)
             user_input1 = input("\n")
-        if user_input0 == 'bellman_ford':
+
+        if user_input0 == 'floyd_warshall':
+            floyd_warshall_test(user_input1)
+        elif user_input0 == 'dijkstra':
+            dijkstra_test(user_input1)
+        elif user_input0 == 'bellman_ford':
             bellman_ford_test(user_input1)
         elif user_input0 == 'dpc':
             dpc_test(user_input1)
