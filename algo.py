@@ -18,7 +18,7 @@ def BellmanFord(stn, src):
     # Step 2: Relax all edges |V| - 1 times. A simple shortest  
     # path from src to any other vertex can have at-most |V| - 1  
     # edges  
-    # changed from num_tp -1 to num_tp to account for extra source node
+    
     for u, hash_table in enumerate(succ):
         # Update dist value and parent index of the adjacent vertices of  
         # the picked vertex. Consider only those vertices which are still in  
@@ -53,25 +53,68 @@ test_stn = STN(5, 8, names, edges)
 
 BellmanFord(test_stn, 0)
 
-#testing with an extra source node
-names_extra_source = 'S A0 C0 A1 C1 X'
+# For testing random node_orderings
+# import random
+# random.shuffle(array)
+# also takes in node ordering input
+# consistency check (test on consistent and non-consistent STN)
+# node ordering is an array of numbers representing the time points of the given STN
+def DPC(stn, node_ordering):
+    succs = stn.get_succs()
+    preds = stn.get_preds()
+    # num_tp = stn.get_num_tp()
+    dist = stn.get_dist_mat()
 
-edge0 = 'S 0 A0'
+    # Traversing the nodes in reverse order
+    for k in reversed(node_ordering):
+        # Look for incoming edges we iterate through the keys
+        for i in preds[k].keys():
+            #for the edges before Yk 
+            if i < k :
+                # process pred 
+                dist[i][k] = preds[k][i]
+                # Look for outgoing edges
+                for j in succs[k].keys():
+                    #for the edges before Yk
+                    if j < k :
+                        # process succ
+                        dist[k][j] = succs[k][j]
+                        # insert new 2 path edge
+                        dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]) 
+                        # check for negative cycle
+                        if dist[i][j] != float("Inf") and dist[j][i] != float("Inf") and dist[i][j] + dist[j][i] < 0:
+                            print("Graph contains negative weight cycle") 
+                            print(dist)
+                            return False
+    print("DPC: \n", dist)
+    return True
 
-edges_extra_source = np.array([edge0, edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
-test_stn_extra_source = STN(6, 9, names_extra_source, edges_extra_source)
+names = 'A0 C0 A1 C1 X'
 
-BellmanFord(test_stn_extra_source, 0)
+edge1 = 'X 12 C0'
+edge2 = 'C1 11 C0'
+edge3 = 'C0 -7 X'
+edge4 = 'C0 -1 C1'
+edge5 = 'A0 3 C0'
+edge6 = 'C0 -1 A0'
+edge7 = 'A1 10 C1'
+edge8 = 'C1 -1 A1'
 
-#testing with an extra sink node
-names_sink = 'A0 C0 A1 C1 X S'
+edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
+test_stn = STN(5, 8, names, edges)
 
-edge9 = 'S 0 S'
+DPC(test_stn)
 
-edges_sink = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8, edge9])
-test_stn_sink = STN(6, 9, names_sink, edges_sink)
+edge1 = 'X -12 C0'
+edge2 = 'C1 -11 C0'
+edge3 = 'C0 -7 X'
+edge4 = 'C0 -1 C1'
+edge5 = 'A0 -3 C0'
+edge6 = 'C0 -1 A0'
+edge7 = 'A1 -10 C1'
+edge8 = 'C1 -1 A1'
 
-BellmanFord(test_stn_sink, 0)
-
-# def DPC(stn, src):
+edges = np.array([edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8])
+test_stn = STN(5, 8, names, edges)
+DPC(test_stn)
 
