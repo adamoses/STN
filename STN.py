@@ -244,7 +244,7 @@ class STN():
         return copy.deepcopy(self.__preds)
 
     def get_names(self):
-        return self.__tp_names.copy()
+        return copy.copy(self.__tp_names)
 
     def get_hash(self):
         return self.__tp_hash.copy()
@@ -256,6 +256,6 @@ class STN():
         return self.__dist_mat_updated
 
     def copy(self):
-        return STN(self.__num_tp+0, self.__num_edges+0, self.__tp_names.copy(), self.__ordered_edges.copy(), name_list=True, edge_list=True)
+        return STN(self.get_num_tp(), self.get_num_edges(), self.get_names(), self.get_ordered_edges(), name_list=True, edge_list=True)
 
     
