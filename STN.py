@@ -1,5 +1,6 @@
 import numpy as np
 import copy
+from algo import naive_update_distances
 
 ####################################################################################
 # STN.py
@@ -258,4 +259,5 @@ class STN():
     def copy(self):
         return STN(self.get_num_tp(), self.get_num_edges(), self.get_names(), self.get_ordered_edges(), name_list=True, edge_list=True)
 
-    
+    def naive_update(self, newEdge):
+        return naive_update_distances(self, newEdge)
