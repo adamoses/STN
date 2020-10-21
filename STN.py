@@ -1,6 +1,6 @@
 import numpy as np
 import copy
-from algo import naive_update_distances
+
 
 ####################################################################################
 # STN.py
@@ -223,6 +223,36 @@ class STN():
     def update_preds(self, predescessors):
         self.__preds = predescessors
 
+####################################################################################
+# - naive_update_distances(STN, newEdge) :
+#
+#           STN - an STN object
+#
+#           newEdge - a string representing an edge 
+#
+#       Returns: an updated distance matrix after checking if adding the new edge creates a
+#                   new shortest distance between each pair of two nodes
+####################################################################################
+
+    def naive_update_distances(self, newEdge):
+        dist = self.get_dist_mat()
+        num_tp = self.get_num_tp()
+        edge = newEdge.split(' ')
+        from_tp = self.find_tp(edge[0])
+        cost = int(edge[1])
+        to_tp = self.find_tp(edge[2])
+
+        for u in np.arange(num_tp):
+            for v in np.arange(num_tp):
+                dist[u][v] = min(dist[u][v], dist[u][from_tp]+cost+dist[to_tp][v])
+                #print(dist[u][v])
+
+        self.insert_edge(newEdge.split(' '))
+        self.update_distances(dist)
+
+        
+
+        return dist
 
 ############################################################################################################
 # - STN retrieval functions :
@@ -259,5 +289,4 @@ class STN():
     def copy(self):
         return STN(self.get_num_tp(), self.get_num_edges(), self.get_names(), self.get_ordered_edges(), name_list=True, edge_list=True)
 
-    def naive_update(self, newEdge):
-        return naive_update_distances(self, newEdge)
+
