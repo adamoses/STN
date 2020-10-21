@@ -1,4 +1,4 @@
-from STN import STN
+from STN import *
 import numpy as np
 from queue import *
 
@@ -76,6 +76,8 @@ def naive_update_distances(STN, newEdge):
         for v in np.arange(num_tp):
             dist[u][v] = min(dist[u][v], dist[u][from_tp]+cost+dist[to_tp][v])
 
+    STN.insert_edge(edge)
+    STN.update_distances(dist)
     return dist
 
 
