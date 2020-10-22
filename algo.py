@@ -54,37 +54,6 @@ def floyd_warshall(STN):
 
 
 ####################################################################################
-<<<<<<< HEAD
-=======
-# - naive_update_distances(STN, newEdge) :
-#
-#           STN - an STN object
-#
-#           newEdge - a string representing an edge 
-#
-#       Returns: an updated distance matrix after checking if adding the new edge creates a
-#                   new shortest distance between each pair of two nodes
-####################################################################################
-
-def naive_update_distances(STN, newEdge):
-    dist = STN.get_dist_mat()
-    num_tp = STN.get_num_tp()
-    edge = newEdge.split(' ')
-    from_tp = STN.find_tp(edge[0])
-    cost = int(edge[1])
-    to_tp = STN.find_tp(edge[2])
-
-    for u in np.arange(num_tp):
-        for v in np.arange(num_tp):
-            dist[u][v] = min(dist[u][v], dist[u][from_tp]+cost+dist[to_tp][v])
-
-    STN.insert_edge(edge)
-    STN.update_distances(dist)
-    return dist
-
-
-####################################################################################
->>>>>>> efd1343631a4be1e5181a1b34b55947dd8f9b12e
 # - dijkstra(STN, node, string=False, sink=False) :
 #
 #           STN - an STN object

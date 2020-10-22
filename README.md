@@ -1,4 +1,4 @@
-# cmpu382-python
+# cmpu382-python 
 Group Members:  
 Adam Moses, Cameron Flores, Daniel Doyon, and Gabor Ptacek  
 Class:  
@@ -29,3 +29,7 @@ Meetings: Saturdays at 6pm ET
 
 ## sources
 - https://www.geeksforgeeks.org/bellman-ford-algorithm-dp-23/
+
+
+## For insert_edge() -
+- check for negative weight cycle (A->B < -B->A)
