@@ -18,9 +18,7 @@ Meetings: Saturdays at 6pm ET
 - Ramalingam99 alg
 
 ##  Cameron Flores
-- Bellman-Ford
-- Bellman-Ford (sink)
-- DPC algorithm
+- Ramalingam99 alg
 
 ## Documentation
 
