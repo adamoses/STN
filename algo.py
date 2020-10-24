@@ -1,4 +1,4 @@
-from STN import STN
+from STN import *
 import numpy as np
 from queue import *
 
@@ -15,7 +15,7 @@ from queue import *
 # bellman_ford()           - runs Bellman Ford's algorithm
 #
 # dpc()                    - runs the Directed Path Consistency search
-
+#
 # prop_fwd_prop_bkwd()     - forward and then backward propagates new edge to update
 #                            distance matrix
 #
@@ -132,6 +132,7 @@ def dijkstra(STN, node, string=False, sink=False):
 
     return distances
 
+
 ## Accepts sink and source nodes
 ## Sink nodes edge: 'node 0 node'
 ## Source: 'node 0 first_node'
@@ -167,16 +168,19 @@ def bellman_ford(stn, src):
         for key in hash_table:  
             if dist[u] != float("Inf") and dist[u] + hash_table[key] < dist[key]:  
                 dist[key] = dist[u] + hash_table[key]  
+
         # Step 3: check for negative-weight cycles. The above step  
         # guarantees shortest distances if graph doesn't contain  
         # negative weight cycle. If we get a shorter path, then there  
         # is a cycle.  
+
         for key in hash_table:  
             if dist[u] != float("Inf") and dist[u] + hash_table[key] < dist[key]:  
-                print("Graph contains negative weight cycle") 
-                return
 
-    print(dist)
+              print("Graph contains negative weight cycle") 
+              return
+
+    return(dist)
 
 
 ####################################################################################
@@ -225,6 +229,7 @@ def dpc(stn, node_ordering):
     # print("DPC: \n", dist)
     print ("Consistent!")
     return True
+
 
 def prop_fwd_prop_bkwd(STN, edge, string=True):
     if string:
@@ -296,4 +301,3 @@ def prop_fwd_prop_bkwd(STN, edge, string=True):
                         dist_mat[e][w] = dist_mat[e][x] + dist_mat[x][w]
                         to_do.append(e)
     return dist_mat
-    

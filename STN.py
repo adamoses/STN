@@ -1,6 +1,7 @@
 import numpy as np
 import copy
 
+
 ####################################################################################
 # STN.py
 # This file contains the class STN and methods associated with the class STN
@@ -223,6 +224,37 @@ class STN():
         self.__preds = predescessors
 
 
+####################################################################################
+# - naive_update_distances(STN, newEdge) :
+#
+#           STN - an STN object
+#
+#           newEdge - a string representing an edge 
+#
+#       Returns: an updated distance matrix after checking if adding the new edge creates a
+#                   new shortest distance between each pair of two nodes
+####################################################################################
+
+    def naive_update_distances(self, newEdge):
+        dist = self.get_dist_mat()
+        num_tp = self.get_num_tp()
+        edge = newEdge.split(' ')
+        from_tp = self.find_tp(edge[0])
+        cost = int(edge[1])
+        to_tp = self.find_tp(edge[2])
+
+        for u in np.arange(num_tp):
+            for v in np.arange(num_tp):
+                dist[u][v] = min(dist[u][v], dist[u][from_tp]+cost+dist[to_tp][v])
+                #print(dist[u][v])
+
+        self.insert_edge(newEdge.split(' '))
+        self.update_distances(dist)
+
+        
+
+        return dist
+
 ############################################################################################################
 # - STN retrieval functions :
 #
@@ -244,7 +276,7 @@ class STN():
         return copy.deepcopy(self.__preds)
 
     def get_names(self):
-        return self.__tp_names.copy()
+        return copy.copy(self.__tp_names)
 
     def get_hash(self):
         return self.__tp_hash.copy()
@@ -256,4 +288,5 @@ class STN():
         return self.__dist_mat_updated
 
     def copy(self):
-        return STN(self.__num_tp+0, self.__num_edges+0, self.__tp_names.copy(), self.__ordered_edges.copy(), name_list=True, edge_list=True)
+        return STN(self.get_num_tp(), self.get_num_edges(), self.get_names(), self.get_ordered_edges(), name_list=True, edge_list=True)
+
