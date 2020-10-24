@@ -7,7 +7,7 @@ import os
 
 ## May need to update the directory string for your computer!
 ## Note double slashes are needed
-directory = 'C:\\Users\\Cameron\\Desktop\\STN\\STN\\sample_STNs'
+directory = './sample_STNs/'
 user_input = ""
 
 def floyd_warshall_test(file):

@@ -12,7 +12,7 @@ from algo import *
 #     user_input = sys.argv[1]
 
 def stringToSTN(input):
-    path = "C:\\Users\\Cameron\\Desktop\\STN\\STN\\sample_STNs\\" + input
+    path = "./sample_STNs/" + input
 
     with open(path, "r") as f:
         stn_string = f.read()
