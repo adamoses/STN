@@ -1,44 +1,94 @@
 import numpy as np
+import random
 from STN import *
 from algo import *
 from stn_parser import *
+import os
 
-# List of files containing STNs on which to run tests
-filelist = ['stn1.stn','stn2.stn','stn3.stn','stn4.stn','stn5.stn']
+## May need to update the directory string for your computer!
+## Note double slashes are needed
+directory = 'C:\\Users\\Cameron\\Desktop\\STN\\STN\\sample_STNs'
+user_input = ""
+
+def floyd_warshall_test(file):
+    stn = stringToSTN(file)
+    floyd_warshall(stn)
+
+def dijkstra_test(file):
+    stn = stringToSTN(file)
+    dijkstra(stn, 0, False, False)
+
+def bellman_ford_test(file):
+    stn = stringToSTN(file)
+    bellman_ford(stn, 0)
+
+def dpc_test(file):
+    stn = stringToSTN(file)
+    node_ordering = stn.get_names()
+    counter = 0
+    for x in node_ordering:
+        node_ordering[counter] = counter
+        counter = counter + 1
+    random.shuffle(node_ordering)
+    dpc(stn, node_ordering)
 
 def prop_test(file):
-
-    # Create 2 identical STNs from file
-    STN1 = STN_parser(file)
+    STN1 = stringToSTN(file)
     STN2 = STN1.copy()
-
-    # Compute and update distance matrix for STN1
     fw1 = floyd_warshall(STN1)
     STN1.update_distances(fw1)
-
-    # Insert new edge to STN2 and compute and update STN2's distance matrix from scratch
     edge = ['D',4,'E']
     STN2.insert_edge(edge)
     fw2 = floyd_warshall(STN2)
-
-    # Assert each index is identical in STN2's distance matrix 
-    # and the distance matrix that returns from prop_fwd_prop_bkwd given STN1 and new edge
     return np.all(prop_fwd_prop_bkwd(STN1, edge) == fw2)
 
+def test_all_sample_stns():
+    while(True):
+        user_input = input("\nEnter algorithm to test (case sensitive):\n\nfloyd_warshall\nnaive_update_distances\ndijkstra\nbellman_ford\ndpc\nprop\nexit\n")
+        if user_input == "exit":
+            print("\nExiting...")
+            break
+        else:
+            print("\nRunning " + user_input +":")
+            for file in os.listdir(directory):
+                if user_input == 'bellman_ford':
+                    bellman_ford_test(file)
+                elif user_input == 'dpc':
+                    dpc_test(file)
+                elif user_input == 'prop':
+                    prop_test(file)
+                else:
+                    print("Error, try again!")
 
-#for each sample STN file, assert each test is true
-for file in filelist:
-    assert(prop_test('sample_STNs/'+file))
+def test_sample_stns():
+    while(True):
+        user_input0 = input("\nEnter algorithm to test (case sensitive):\n\nfloyd_warshall\nnaive_update_distances\ndijkstra\nbellman_ford\ndpc\nprop\nexit\n")
+        if user_input0 == "exit":
+            print("\nExiting...")
+            break
+        else:
+            print("\nRunning " + user_input0 +":\nPick an stn:\n")
+            for file in os.listdir(directory):
+                print(file)
+            user_input1 = input("\n")
+
+        if user_input0 == 'floyd_warshall':
+            floyd_warshall_test(user_input1)
+        elif user_input0 == 'dijkstra':
+            dijkstra_test(user_input1)
+        elif user_input0 == 'bellman_ford':
+            bellman_ford_test(user_input1)
+        elif user_input0 == 'dpc':
+            dpc_test(user_input1)
+        elif user_input0 == 'prop':
+            prop_test(user_input1)
+        else:
+            print("Error, try again!")
+        
+user_input = input("\n\'one\' or \'all\' sample stns\n")
+if user_input == 'one':
+    test_sample_stns()
+else:
+    test_all_sample_stns()
 
 
-#test on stn2
-def naive_test(file_1):
-    stn_1 = string_to_stn(file_1)
-    edge = "A 43 B"
-    stn_1.update_distances(floyd_warshall(stn_1))
-    print(stn_1.get_dist_mat())
-    stn_1.naive_update_distances(edge)
-    print(stn_1.get_dist_mat())
-
-file_location = "C://Users\gptacekLaptop\Downloads\Vassar\Sem5\cmpu382\code\STN\sample_STNs\stn2.stn"
-naive_test(file_location)

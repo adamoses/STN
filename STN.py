@@ -223,6 +223,7 @@ class STN():
     def update_preds(self, predescessors):
         self.__preds = predescessors
 
+
 ####################################################################################
 # - naive_update_distances(STN, newEdge) :
 #
@@ -288,5 +289,4 @@ class STN():
 
     def copy(self):
         return STN(self.get_num_tp(), self.get_num_edges(), self.get_names(), self.get_ordered_edges(), name_list=True, edge_list=True)
-
 
