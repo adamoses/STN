@@ -66,19 +66,19 @@ def floyd_warshall(STN):
 #                   new shortest distance between each pair of two nodes
 ####################################################################################
 
-def naive_update_distances(STN, newEdge):
-    dist = STN.get_dist_mat()
-    num_tp = STN.get_num_tp()
-    edge = newEdge.split(' ')
-    from_tp = STN.find_tp(edge[0])
-    cost = int(edge[1])
-    to_tp = STN.find_tp(edge[2])
+#def naive_update_distances(STN, newEdge):
+#    dist = STN.get_dist_mat()
+#    num_tp = STN.get_num_tp()
+#    edge = newEdge.split(' ')
+#    from_tp = STN.find_tp(edge[0])
+#    cost = int(edge[1])
+#    to_tp = STN.find_tp(edge[2])
 
-    for u in np.arange(num_tp):
-        for v in np.arange(num_tp):
-            dist[u][v] = min(dist[u][v], dist[u][from_tp]+cost+dist[to_tp][v])
+#    for u in np.arange(num_tp):
+#        for v in np.arange(num_tp):
+#            dist[u][v] = min(dist[u][v], dist[u][from_tp]+cost+dist[to_tp][v])
 
-    return dist
+#    return dist
 
 
 ####################################################################################
