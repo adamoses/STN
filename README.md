@@ -16,6 +16,7 @@ Meetings: Saturdays at 6pm ET
 
 ##  Gabor Ptacek
 - Ramalingam99 alg
+- naive test
 
 ##  Cameron Flores
 - Ramalingam99 alg
