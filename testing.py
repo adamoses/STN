@@ -14,6 +14,17 @@ def floyd_warshall_test(file):
     stn = stringToSTN(file)
     floyd_warshall(stn)
 
+def naive_test(file):
+    stn1 = stringToSTN(file)
+    rand_tp_1 = random.choice(stn1.get_names) 
+    rand_tp_2 = random.choice(stn1.get_names)
+    #edge = 'D 4 E'
+    edge = rand_tp_1 + random.randint(0,5) + rand_tp_2
+    print("edge: ", edge)
+    fw1 = floyd_warshall(stn1)
+    stn1.update_distances(fw1)
+    print("dist mat after naive: ", stn1.naive_update_distances(edge))
+
 def dijkstra_test(file):
     stn = stringToSTN(file)
     dijkstra(stn, 0, False, False)
@@ -57,6 +68,8 @@ def test_all_sample_stns():
                     dpc_test(file)
                 elif user_input == 'prop':
                     prop_test(file)
+                elif user_input == 'naive':
+                    naive_test(file)
                 else:
                     print("Error, try again!")
 
