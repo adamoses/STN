@@ -1,17 +1,18 @@
 import numpy as np
 import copy
 
+
 ####################################################################################
 # STN.py
 # This file contains the class STN and methods associated with the class STN
 #
-# STN objects have instance variables representing 
+# STN objects have instance variables representing
 #
-#  [int]                               - number of time points 
-#  [int]                               - number of edges 
-#  [np.array(to_names)]                - names of the time points 
+#  [int]                               - number of time points
+#  [int]                               - number of edges
+#  [np.array(to_names)]                - names of the time points
 #  [dict]                              - a hash table for lookup of time points
-#  [np.array(dicts)                    - predecessor and 
+#  [np.array(dicts)                    - predecessor and
 #  [np.array(dicts)                    - successor hash tables for each node
 #  [np.matrix(shape=(num_tp, num_tp))] - a distance matrix
 #  [bool]                              - a flag to indicate if the distance matrix is updated
@@ -24,7 +25,7 @@ class STN():
 
 
 ############################################################################################################
-# - STN(num_tp, num_edges, tp_names, ord_edges, name_list=False, edge_list=False) : 
+# - STN(num_tp, num_edges, tp_names, ord_edges, name_list=False, edge_list=False) :
 #
 #         num_tp - an int representing the number of time points in the STN
 #
@@ -33,20 +34,20 @@ class STN():
 #
 #
 #         tp_names - a list of strings representing the names of time points (['A' 'B' 'C'])
-#  
+#
 #                                   or when name_list = False
 #
 #                    a string representing the names of time points ('A B C')
 #
 #
-#         ord_edges - an array of lists representing edges (['from_tp' cost 'to_tp']) where from_tp and 
+#         ord_edges - an array of lists representing edges (['from_tp' cost 'to_tp']) where from_tp and
 #                     to_tp are the strings representing the time points
 #
 #                                   or when edge_list = False
 #
-#                     an array of strings representing edges ('from_tp cost to_tp') where from_tp and 
+#                     an array of strings representing edges ('from_tp cost to_tp') where from_tp and
 #                     to_tp are the strings representing the time points
-#         
+#
 #
 #    Initializes the STN object
 #
@@ -55,17 +56,17 @@ class STN():
 
     def __init__(self, num_tp, num_edges, tp_names, ord_edges, name_list=False, edge_list=False):
 
-        self.__num_tp = num_tp         
+        self.__num_tp = num_tp
         self.__num_edges = num_edges
         if not name_list and (not tp_names == ''):
-            self.__tp_names = tp_names.split(' ')  
+            self.__tp_names = tp_names.split(' ')
         elif not tp_names == '':
             self.__tp_names = tp_names
         else:
-            self.__tp_names = None   
+            self.__tp_names = None
 
-        self.__tp_hash = {}          
-        self.__succs = np.array([])  
+        self.__tp_hash = {}
+        self.__succs = np.array([])
         self.__preds = np.array([])
         self.__dist_matrix = np.zeros(shape=(self.__num_tp, self.__num_tp)) + np.inf
         self.__dist_mat_updated = False
@@ -76,17 +77,17 @@ class STN():
             self.__preds = np.append(self.__preds, {})
             self.__tp_hash[i] = self.__tp_names[i]
 
-         
+
         for i in np.arange(num_edges):
             string = ord_edges[i]
             if not edge_list:
                 self.insert_edge(string.split(' '))
-            else: 
+            else:
                 self.insert_edge(string)
 
 
 ############################################################################################################
-# - STN.insert_tp(name) : 
+# - STN.insert_tp(name) :
 #
 #         name - a string representing the new time point's name ('A')
 #
@@ -123,10 +124,10 @@ class STN():
 #                an array formatted as ['from_tp_int' cost 'to_tp_int']
 #                which uses ints instead to reference the time points
 #
-#   inserts the new edge into the STN object if there doesn't already exist an edge with a smaller constraint, 
+#   inserts the new edge into the STN object if there doesn't already exist an edge with a smaller constraint,
 #   updating all necessary fields of the object
 #
-#   Returns: nothing  
+#   Returns: nothing
 ############################################################################################################
 
     def insert_edge(self, edge, string=True):
@@ -152,7 +153,7 @@ class STN():
 ############################################################################################################
 # - STN.find_tp(name, string=True) :
 #
-#         name - the name of the time point as a string ('A'), will return the time point's int (0) 
+#         name - the name of the time point as a string ('A'), will return the time point's int (0)
 #
 #                                       or when string=False
 #
@@ -194,8 +195,8 @@ class STN():
 ############################################################################################################
 # - STN.update_succs(succs) :
 #
-#         succs - the updated successor array 
-#         preds = np.array(len=num_tp) | succs[i] = {1:6, 4:2}. Time point i  
+#         succs - the updated successor array
+#         preds = np.array(len=num_tp) | succs[i] = {1:6, 4:2}. Time point i
 #                 has successors 1 and 4 with distances 6 and 2 respectively
 #
 #   updates the successor array for STN
@@ -210,8 +211,8 @@ class STN():
 ############################################################################################################
 # - STN.update_preds(preds) :
 #
-#         preds - the updated predecessor array 
-#         preds = np.array(len=num_tp) | preds[i] = {1:6, 4:2}. Time point i  
+#         preds - the updated predecessor array
+#         preds = np.array(len=num_tp) | preds[i] = {1:6, 4:2}. Time point i
 #                 has predecessors 1 and 4 with distances 6 and 2 respectively
 #
 #   updates the predecessor array for STN
@@ -223,10 +224,41 @@ class STN():
         self.__preds = predescessors
 
 
+####################################################################################
+# - naive_update_distances(STN, newEdge) :
+#
+#           STN - an STN object
+#
+#           newEdge - a string representing an edge
+#
+#       Returns: an updated distance matrix after checking if adding the new edge creates a
+#                   new shortest distance between each pair of two nodes
+####################################################################################
+
+    def naive_update_distances(self, newEdge):
+        dist = self.get_dist_mat()
+        num_tp = self.get_num_tp()
+        edge = newEdge.split(' ')
+        from_tp = self.find_tp(edge[0])
+        cost = int(edge[1])
+        to_tp = self.find_tp(edge[2])
+
+        for u in np.arange(num_tp):
+            for v in np.arange(num_tp):
+                dist[u][v] = min(dist[u][v], dist[u][from_tp]+cost+dist[to_tp][v])
+                #print(dist[u][v])
+
+        self.insert_edge(newEdge.split(' '))
+        self.update_distances(dist)
+
+
+
+        return dist
+
 ############################################################################################################
 # - STN retrieval functions :
 #
-#   The following methods simply return a COPY for each  
+#   The following methods simply return a COPY for each
 ############################################################################################################
     def get_num_tp(self):
         return self.__num_tp+0
@@ -244,7 +276,7 @@ class STN():
         return copy.deepcopy(self.__preds)
 
     def get_names(self):
-        return self.__tp_names.copy()
+        return copy.copy(self.__tp_names)
 
     def get_hash(self):
         return self.__tp_hash.copy()
@@ -256,33 +288,4 @@ class STN():
         return self.__dist_mat_updated
 
     def copy(self):
-        return STN(self.__num_tp+0, self.__num_edges+0, self.__tp_names.copy(), self.__ordered_edges.copy(), name_list=True, edge_list=True)
-
-    ####################################################################################
-# - naive_update_distances(STN, newEdge) :
-#
-#           STN - an STN object
-#
-#           newEdge - a string representing an edge 
-#
-#       Returns: an updated distance matrix after checking if adding the new edge creates a
-#                   new shortest distance between each pair of two nodes
-####################################################################################
- 
-    def naive_update_distances(self, newEdge):
-        dist = self.get_dist_mat()
-        num_tp = self.get_num_tp()
-        edge = newEdge.split(' ')
-        from_tp = self.find_tp(edge[0])
-        cost = int(edge[1])
-        to_tp = self.find_tp(edge[2])
- 
-        for u in np.arange(num_tp):
-            for v in np.arange(num_tp):
-                dist[u][v] = min(dist[u][v], dist[u][from_tp]+cost+dist[to_tp][v])
-                #print(dist[u][v])
- 
-        self.insert_edge(newEdge.split(' '))
-        self.update_distances(dist)
- 
-        return dist
+        return STN(self.get_num_tp(), self.get_num_edges(), self.get_names(), self.get_ordered_edges(), name_list=True, edge_list=True)
