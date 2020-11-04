@@ -1,4 +1,4 @@
-from STN import *
+from STN import STN
 import numpy as np
 from queue import *
 
@@ -15,7 +15,7 @@ from queue import *
 # bellman_ford()           - runs Bellman Ford's algorithm
 #
 # dpc()                    - runs the Directed Path Consistency search
-#
+
 # prop_fwd_prop_bkwd()     - forward and then backward propagates new edge to update
 #                            distance matrix
 #
@@ -55,30 +55,30 @@ def floyd_warshall(STN):
     return distanceMatrix
 
 
-####################################################################################
-# - naive_update_distances(STN, newEdge) :
-#
-#           STN - an STN object
-#
-#           newEdge - a string representing an edge 
-#
-#       Returns: an updated distance matrix after checking if adding the new edge creates a
-#                   new shortest distance between each pair of two nodes
-####################################################################################
+# ####################################################################################
+# # - naive_update_distances(STN, newEdge) :
+# #
+# #           STN - an STN object
+# #
+# #           newEdge - a string representing an edge 
+# #
+# #       Returns: an updated distance matrix after checking if adding the new edge creates a
+# #                   new shortest distance between each pair of two nodes
+# ####################################################################################
 
-#def naive_update_distances(STN, newEdge):
-#    dist = STN.get_dist_mat()
-#    num_tp = STN.get_num_tp()
-#    edge = newEdge.split(' ')
-#    from_tp = STN.find_tp(edge[0])
-#    cost = int(edge[1])
-#    to_tp = STN.find_tp(edge[2])
+# def naive_update_distances(STN, newEdge):
+#     dist = STN.get_dist_mat()
+#     num_tp = STN.get_num_tp()
+#     edge = newEdge.split(' ')
+#     from_tp = STN.find_tp(edge[0])
+#     cost = int(edge[1])
+#     to_tp = STN.find_tp(edge[2])
 
-#    for u in np.arange(num_tp):
-#        for v in np.arange(num_tp):
-#            dist[u][v] = min(dist[u][v], dist[u][from_tp]+cost+dist[to_tp][v])
+#     for u in np.arange(num_tp):
+#         for v in np.arange(num_tp):
+#             dist[u][v] = min(dist[u][v], dist[u][from_tp]+cost+dist[to_tp][v])
 
-#    return dist
+#     return dist
 
 
 ####################################################################################
@@ -132,7 +132,6 @@ def dijkstra(STN, node, string=False, sink=False):
 
     return distances
 
-
 ## Accepts sink and source nodes
 ## Sink nodes edge: 'node 0 node'
 ## Source: 'node 0 first_node'
@@ -168,19 +167,16 @@ def bellman_ford(stn, src):
         for key in hash_table:  
             if dist[u] != float("Inf") and dist[u] + hash_table[key] < dist[key]:  
                 dist[key] = dist[u] + hash_table[key]  
-
         # Step 3: check for negative-weight cycles. The above step  
         # guarantees shortest distances if graph doesn't contain  
         # negative weight cycle. If we get a shorter path, then there  
         # is a cycle.  
-
         for key in hash_table:  
             if dist[u] != float("Inf") and dist[u] + hash_table[key] < dist[key]:  
+                print("Graph contains negative weight cycle") 
+                return
 
-              print("Graph contains negative weight cycle") 
-              return
-
-    return(dist)
+    print(dist)
 
 
 ####################################################################################
@@ -229,7 +225,6 @@ def dpc(stn, node_ordering):
     # print("DPC: \n", dist)
     print ("Consistent!")
     return True
-
 
 def prop_fwd_prop_bkwd(STN, edge, string=True):
     if string:
@@ -301,3 +296,4 @@ def prop_fwd_prop_bkwd(STN, edge, string=True):
                         dist_mat[e][w] = dist_mat[e][x] + dist_mat[x][w]
                         to_do.append(e)
     return dist_mat
+    
