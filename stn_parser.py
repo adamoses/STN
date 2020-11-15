@@ -2,20 +2,8 @@ import numpy as np
 import sys
 from STN import *
 from algo import *
+from STNU import *
 
-
-#will change this so user can choose
-# if(len(sys.argv)!= 2):
-#     print('\n\nUsage: python parser.py input_file.txt\n\n')
-#     quit(0)
-# else:
-#     user_input = sys.argv[1]
-
-def stringToSTN(input):
-    path = "./sample_STNs/" + input
-
-    with open(path, "r") as f:
-        stn_string = f.read()
 
 ####################################################################################
 # - string_to_stn(input) :
@@ -63,23 +51,72 @@ def string_to_stn(input):
 
     return STN(num_tp, num_edges, strings, edges)
 
+def string_to_stnu(input):
+    stn = open(input, "r")
+    stn_string = stn.read()
+    stn.close()
 
+    
+    lines_list = stn_string.splitlines()
+    
+    arr = np.array(lines_list)
 
-def to_string(input):
+    counter = 0
+    idx = []
+    for x in arr:
+        if x.startswith('#'):
+            idx.append(counter)
+        counter+=1 
+    arr = np.delete(arr,idx,axis = 0)
+
+    num_tp = int(arr[1])
+    num_edges = int(arr[2])
+    num_cont_edges = int(arr[3])
+
+    strings = arr[4]
+
+    edges = []
+    contingent_links = []
+
+    for line in arr[5:]:
+        if len(line.split()) == 4:
+            contingent_links.append(line)
+        else:
+            edges.append(line)
+        
+
+    return STNU(num_tp, num_edges, num_cont_edges, strings, edges, contingent_links)
+
+def stnu_to_string(input):
     string = ''
-    succ = input.get_succs()
-    edges = np.array([])
-    names = input.get_names()
-
-    for i in np.arange(input.get_num_tp()):
-        for key,val in succ[i].items():
-            new_edge = names[i]+' '+str(val)+' '+names[key]
-            edges = np.append(edges, new_edge)
+    edges = input.get_ordered_edges() 
+    edges = [' '.join(edge) for edge in edges]
+    cont_edges = input.get_cont_links()
+    cont_edges = [' '.join(edge) for edge in cont_edges]
+    names = ' ' 
+    names = names.join(input.get_names())
 
     string += "# KIND OF NETWORK\nSTN\n# Num Time-Points\n"+str(input.get_num_tp())
     string += "\n# Num Ordinary Edges\n"+str(input.get_num_edges())+"\n"
-    string += "# Time-Point Names\n"+ " ".join(names) +"\n# Ordinary Edges\n"
+    string += "# Num Contingent Links\n"+str(input.get_num_cont_links())+'\n'
+    string += "# Time-Point Names\n"+ names +"\n# Ordinary Edges\n"
+    string += '\n'.join(edges)+'\n'+'# Contingent Links\n'+"\n".join(cont_edges)
+
+    return string
+
+def stn_to_string(input):
+    string = ''
+    edges = input.get_ordered_edges() 
+    edges = [' '.join(edge) for edge in edges]
+    names = ' ' 
+    names = names.join(input.get_names())
+
+    string += "# KIND OF NETWORK\nSTNU\n# Num Time-Points\n"+str(input.get_num_tp())
+    string += "\n# Num Ordinary Edges\n"+str(input.get_num_edges())+"\n"
+    string += "# Time-Point Names\n"+ names +"\n# Ordinary Edges\n"
     string += '\n'.join(edges)
 
     return string
 
+test = string_to_stnu('sample_STNs/dc-2.stnu')
+print(stnu_to_string(test))

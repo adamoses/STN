@@ -76,7 +76,6 @@ class STN():
             self.__succs = np.append(self.__succs, {})
             self.__preds = np.append(self.__preds, {})
             self.__tp_hash[i] = self.__tp_names[i]
-
          
         for i in np.arange(num_edges):
             string = ord_edges[i]

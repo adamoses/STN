@@ -178,6 +178,48 @@ def bellman_ford(stn, src):
 
     print(dist)
 
+####################################################################################
+# - JohnsonAlgorithm(graph) :
+#
+#
+#       Returns: 
+####################################################################################
+
+def JohnsonAlgorithm(graph):
+
+    edges = []
+
+    # Create a list of edges for Bellman-Ford Algorithm
+    for i in range(len(graph)):
+        for j in range(len(graph[i])):
+            
+            if graph[i][j] != 0:
+                edges.append([i, j, graph[i][j]])
+
+    # Weights used to modify the originals
+    modifyWeights = bellman_ford(edges, graph, len(graph))
+    modifiedGraph = [[0 for x in range(len(graph))] for y in range(len(graph))]
+
+    # Modify the weights to get rid of negative weights
+    for i in range(len(graph)):
+        for j in range(len(graph)):
+
+            if graph[i][j] != 0:
+                modifiedGraph[i][j] = (graph[i][j] + modifyWeights[i] - modifyWeights[j])
+
+    print ('Modified Graph: ' + str(modifiedGraph))
+
+    #run Dijkstra for every vertex as source one by one
+    for src in range(len(graph)):
+        print('\nShortest Distance with vertex ' + str(src) + ' as the source:\n')
+        dijkstra(graph, modifiedGraph, src)
+    
+    #Driver Code
+    graph = [[0, -5, 2, 3],
+             [0, 0, 4, 0],
+             [0, 0, 0, 1],
+             [0, 0, 0, 0]]
+
 
 ####################################################################################
 # - dpc(STN, node_ordering) :
