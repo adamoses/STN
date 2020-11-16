@@ -1,6 +1,7 @@
 from STN import *
 import numpy as np
 from queue import *
+from util import *
 
 ####################################################################################
 # algo.py
@@ -301,3 +302,38 @@ def prop_fwd_prop_bkwd(STN, edge, string=True):
                         dist_mat[e][w] = dist_mat[e][x] + dist_mat[x][w]
                         to_do.append(e)
     return dist_mat
+
+
+####################################################################################
+# - update_potential(stn, dist_mat,source) :
+#
+#           stn - an STN object
+#
+#           source - source node 
+#
+#       Returns: updated distance matrix
+####################################################################################    
+
+def update_potential(stn, src):
+    dist_mat = stn.get_dist_mat()
+    updated_dist = dist_mat
+    
+    succ = stn.get_succs()
+    
+    num_tp = stn.get_num_tp()
+    
+    p_queue = PriorityQueue()
+    p_queue.put((0, src))
+
+    queue = PriorityQueueSTN(p_queue)
+
+    while (not(queue.empty())):
+        w = queue.extractMinNode()
+        for v, hash_table in enumerate(succ):
+            if (updated_dist[v] < updated_dist[w] - hash_table[v]):
+                updated_dist[v] = updated_dist[w] - hash_table[v]
+                new_key = dist_mat[v] - updated_dist[v]
+                if(queue.insertOrDecreaseKeyIfSmaller(v, new_key) == False):
+                    return False
+                    
+    return updated_dist
