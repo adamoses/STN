@@ -182,7 +182,7 @@ def bellman_ford(stn, src):
 # - JohnsonAlgorithm(graph) :
 #
 #
-#       Returns: 
+#       Returns: Graph
 ####################################################################################
 
 def JohnsonAlgorithm(graph):
@@ -339,3 +339,14 @@ def prop_fwd_prop_bkwd(STN, edge, string=True):
                         to_do.append(e)
     return dist_mat
     
+def Morris_2014(STNU):
+
+    # identify negative nodes
+    negative_nodes = []
+
+    preds = STNU.get_preds()
+    cont_preds = STNU.get_cont_preds()
+    print(cont_preds)
+
+    for node in STNU.get_names():
+        print(node)

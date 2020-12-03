@@ -119,4 +119,13 @@ def stn_to_string(input):
     return string
 
 test = string_to_stnu('sample_STNs/dc-2.stnu')
-print(stnu_to_string(test))
+
+print(stnu_to_string(test), '\n\n\n')
+
+print(test.get_preds())
+
+test.to_normal()
+
+# print(stnu_to_string(test), '\n\n')
+
+# print(test.get_cont_preds())
