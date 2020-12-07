@@ -9,6 +9,7 @@ import os
 ## Note double slashes are needed
 directory = 'C:\\Users\\Cameron\\Desktop\\STN\\STN\\sample_STNs'
 user_input = ""
+algo_strings = ["floyd_warshall", "naive_update_distances", " dijkstra", "bellman_ford", "dpc", "nprop", "update_potential"]
 
 def floyd_warshall_test(file):
     stn = stringToSTN(file)
@@ -31,13 +32,13 @@ def dijkstra_test(file):
 
 def bellman_ford_test(file):
     stn = stringToSTN(file)
-    bellman_ford(stn, 0)
+    print(bellman_ford(stn, 0))
 
 def dpc_test(file):
     stn = stringToSTN(file)
     node_ordering = stn.get_names()
     counter = 0
-    for x in node_ordering:
+    for _ in node_ordering:
         node_ordering[counter] = counter
         counter = counter + 1
     random.shuffle(node_ordering)
@@ -53,9 +54,18 @@ def prop_test(file):
     fw2 = floyd_warshall(STN2)
     return np.all(prop_fwd_prop_bkwd(STN1, edge) == fw2)
 
+def update_potential_test(file):
+    stn = stringToSTN(file)
+    dist = bellman_ford(stn, 0)
+    print("updated dist: ", update_potential(stn, dist, 'A'), "\n")
+
 def test_all_sample_stns():
     while(True):
-        user_input = input("\nEnter algorithm to test (case sensitive):\n\nfloyd_warshall\nnaive_update_distances\ndijkstra\nbellman_ford\ndpc\nprop\nexit\n")
+        user_input = input("\nEnter algorithm (or number) to test (case sensitive):\n\nfloyd_warshall\nnaive_update_distances\ndijkstra\nbellman_ford\ndpc\nprop\nupdate_potential\nexit\n")
+
+        for labels in algo_strings:
+
+
         if user_input == "exit":
             print("\nExiting...")
             break
@@ -70,12 +80,14 @@ def test_all_sample_stns():
                     prop_test(file)
                 elif user_input == 'naive':
                     naive_test(file)
+                elif user_input == 'update_potential':
+                    update_potential_test(file)
                 else:
                     print("Error, try again!")
 
 def test_sample_stns():
     while(True):
-        user_input0 = input("\nEnter algorithm to test (case sensitive):\n\nfloyd_warshall\nnaive_update_distances\ndijkstra\nbellman_ford\ndpc\nprop\nexit\n")
+        user_input0 = input("\nEnter algorithm (or number) to test (case sensitive):\n\nfloyd_warshall\nnaive_update_distances\ndijkstra\nbellman_ford\ndpc\nprop\nexit\n")
         if user_input0 == "exit":
             print("\nExiting...")
             break
@@ -95,6 +107,8 @@ def test_sample_stns():
             dpc_test(user_input1)
         elif user_input0 == 'prop':
             prop_test(user_input1)
+        elif user_input0 == 'update_potential':
+            update_potential_test(user_input1)
         else:
             print("Error, try again!")
         

@@ -48,16 +48,22 @@ class PriorityQueueSTN():
                 return self.inQ
 
     def key(self, x):
-        for i, val in enumerate(self.queue):            
-            if x == val:
-                return i
+        if self.state(x) == self.alreadyPopped:
+            for val, index in self.popped:            
+                if x == val:
+                    return index
+        else:
+            for i, val in enumerate(self.queue):            
+                if x == val:
+                    return i
 
     def empty(self):
         return len(self.queue) == 0
 
     def extractMinNode(self):
+        index = len(self.queue) - 1
         val = self.queue.pop()
-        self.popped.append(val)
+        self.popped.append((val, index))
         return val
 
     def insert(self, x, p):

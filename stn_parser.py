@@ -2,20 +2,10 @@ import numpy as np
 import sys
 from STN import *
 from algo import *
+import os
 
 
-#will change this so user can choose
-# if(len(sys.argv)!= 2):
-#     print('\n\nUsage: python parser.py input_file.txt\n\n')
-#     quit(0)
-# else:
-#     user_input = sys.argv[1]
 
-def stringToSTN(input):
-    path = "C:\\Users\\Cameron\\Desktop\\STN\\STN\\sample_STNs\\" + input
-
-    with open(path, "r") as f:
-        stn_string = f.read()
 
 ####################################################################################
 # - string_to_stn(input) :
@@ -36,8 +26,10 @@ def stringToSTN(input):
 #       Returns: an stn object with all the values from the text file
 ####################################################################################
 
-def string_to_stn(input):
-    stn = open(input, "r")
+def stringToSTN(input):
+
+    path = "C:\\Users\\Cameron\\Desktop\\STN\\STN\\sample_STNs\\" + input
+    stn = open(path, "r")
     stn_string = stn.read()
     stn.close()
 
