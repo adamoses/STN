@@ -104,7 +104,7 @@ def dijkstra(STN, node, string=False, sink=False):
                 p_queue.put((distances[succ], succ))
                 if nextNodes[node][succ] < 0:
                     print('\nDijkstra\'s algorithm can not be used on networks with negative weight edges.\n')
-                    exit(0)
+                    return
 
     return distances
 
@@ -148,8 +148,8 @@ def bellman_ford(stn, src):
             print("Graph contains negative weight cycle")
             return False
 
-    print(dist)
     return (dist)
+    
 """ 
     succ = stn.get_succs()
     num_tp = stn.get_num_tp()
