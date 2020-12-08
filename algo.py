@@ -19,6 +19,9 @@ from util import *
 
 # prop_fwd_prop_bkwd()     - forward and then backward propagates new edge to update
 #                            distance matrix
+
+# update_potential()       - updated the potential function/distance matrix and adds tightened edges to the stn
+#
 #
 # none of the methods called in this file make any changes to the STN object which they are passed
 #
@@ -312,7 +315,7 @@ def prop_fwd_prop_bkwd(STN, edge, string=True):
 #
 #           source - source node
 #
-#       Returns: updated distance matrix (does not alter stn directly)
+#       Returns: updated distance matrix, adds new tightened edges as a side effect
 ####################################################################################
 
 # maybe include cases
@@ -350,6 +353,12 @@ def update_potential(stn, solution, src):
                     if(queue.insertOrDecreaseKeyIfSmaller(new_key, v)==False):
                         return False
     
+    old_dist = stn.get_dist_mat_upd()
+    for j in range(updated_dist[0]):
+        for i in range(updated_dist):
+            if(updated_dist[i][j] <= old_dist[i][j]):
+                stn.insert_edge(i,j,False)
+
     return updated_dist
 
 ####################################################################################
