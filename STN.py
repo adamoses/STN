@@ -1,6 +1,7 @@
 import numpy as np
 import copy
-
+from queue import *
+from util import *
 
 ####################################################################################
 # STN.py
@@ -254,6 +255,82 @@ class STN():
 
 
         return dist
+
+
+####################################################################################
+# - update_potential(stn, solution, source) :
+#
+#           stn - an STN object
+#
+#           solution - a solution to the stn object
+#
+#           source - source node
+#
+#       Returns: updated distance matrix, adds new tightened edges as a side effect
+####################################################################################
+
+
+    def update_potential(self, solution, src):
+
+        if not solution:
+            return False
+        updated_dist = solution
+        pred = self.get_preds()
+
+        #queues
+        p_queue = PriorityQueue()
+        src_val = self.get_source_row(src)
+        queue = PriorityQueueSTN(p_queue)
+        queue.insert(src_val, 0)
+
+        while (not(queue.empty())):
+            #print("empty?", queue.empty())
+            w = queue.extractMinNode()
+            #print("w:", w)
+
+            # remember to change to preds
+            for v, hash_table in enumerate(pred):
+                #print("hash:", hash_table)
+                for key in hash_table:
+                    #print("dist_v:", updated_dist[v], "dist_w:", updated_dist[w], "succ", hash_table[key])
+                    if (updated_dist[v] < updated_dist[w] - hash_table[key]):
+                        updated_dist[v] = updated_dist[w] - hash_table[key]
+                        #print("v_update: ", updated_dist[v])
+                        new_key = solution[v] - updated_dist[v]
+                        #print("new key: ", new_key)
+                        if(queue.insertOrDecreaseKeyIfSmaller(new_key, v)==False):
+                            return False
+
+        # for j in range(updated_dist[0]):
+        #     for i in range(updated_dist):
+        #         if(updated_dist[i][j] <= old_dist[i][j]):
+        #             print([i, updated_dist[i][j], j])
+        #             self.insert_edge([i, updated_dist[i][j], j], False)
+        # self.update_distances(updated_dist)
+
+        return updated_dist
+
+####################################################################################
+# - get_source_row(stn, source) :
+#
+#           stn - an STN object
+#
+#           source - source node
+#
+#       Returns: the row in the distance matrix that corresponds to the distances
+#           from the source. If source is not a node in the stn it returns False
+####################################################################################
+
+    def get_source_row(self,source):
+        tp_names = self.get_names()
+
+        for count, name in enumerate(tp_names, 0):
+            if(source == name):
+                row_val = count
+                return row_val
+        return False
+
+
 
 ############################################################################################################
 # - STN retrieval functions :

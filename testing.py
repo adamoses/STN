@@ -60,9 +60,11 @@ def prop_test(file):
 def update_potential_test(file):
     stn = stringToSTN(file)
     dist = bellman_ford(stn, 0)
-    print("\nupdated dist: ", update_potential(stn, dist, 'A'), "\n")
+    a = stn.get_ordered_edges()
+    print("\nupdated dist: ", stn.update_potential(dist, 'A'), "\n")
+    b = stn.get_ordered_edges()
+    print(a == b)
 
-## Make into list of functions 
 algo_strings = ["floyd_warshall", "naive_update_distances", " dijkstra", "bellman_ford", "dpc", "nprop", "update_potential"]
 algo_funcs = [floyd_warshall_test, naive_test, dijkstra_test, bellman_ford_test, dpc_test, prop_test, update_potential_test]
 
