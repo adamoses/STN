@@ -58,8 +58,6 @@ def floyd_warshall(STN):
 
     return distanceMatrix
 
-
-
 ####################################################################################
 # - dijkstra(STN, node, string=False, sink=False) :
 #
@@ -133,13 +131,12 @@ def bellman_ford(stn, src):
     num_tp = stn.get_num_tp()
     dist = [float("Inf")] * (num_tp)
     dist[src] = 0
-
+    
     for _ in range(num_tp -1):
         for u, s, v in stn.get_ordered_edges():
             u = stn.find_tp(u)
             s = int(s)
             v = stn.find_tp(v)
-            #print("u, s, v: ", u, s, v)
             if dist[u] != float("Inf") and dist[u] + s < dist[v]:
                 dist[v] = dist[u] + s
 
@@ -152,6 +149,48 @@ def bellman_ford(stn, src):
             return False
 
     return (dist)
+
+####################################################################################
+# - JohnsonAlgorithm(graph) :
+#
+#
+#       Returns: Graph
+####################################################################################
+
+def JohnsonAlgorithm(graph):
+
+    edges = []
+
+    # Create a list of edges for Bellman-Ford Algorithm
+    for i in range(len(graph)):
+        for j in range(len(graph[i])):
+            
+            if graph[i][j] != 0:
+                edges.append([i, j, graph[i][j]])
+
+    # Weights used to modify the originals
+    modifyWeights = bellman_ford(edges, graph, len(graph))
+    modifiedGraph = [[0 for x in range(len(graph))] for y in range(len(graph))]
+
+    # Modify the weights to get rid of negative weights
+    for i in range(len(graph)):
+        for j in range(len(graph)):
+
+            if graph[i][j] != 0:
+                modifiedGraph[i][j] = (graph[i][j] + modifyWeights[i] - modifyWeights[j])
+
+    print ('Modified Graph: ' + str(modifiedGraph))
+
+    #run Dijkstra for every vertex as source one by one
+    for src in range(len(graph)):
+        print('\nShortest Distance with vertex ' + str(src) + ' as the source:\n')
+        dijkstra(graph, modifiedGraph, src)
+    
+    #Driver Code
+    graph = [[0, -5, 2, 3],
+             [0, 0, 4, 0],
+             [0, 0, 0, 1],
+             [0, 0, 0, 0]]
     
 ####################################################################################
 # - dpc(STN, node_ordering) :
@@ -271,7 +310,6 @@ def prop_fwd_prop_bkwd(STN, edge, string=True):
                         to_do.append(e)
     return dist_mat
 
-
 def Morris_2014(STNU):
 
     # identify negative nodes
@@ -369,3 +407,4 @@ def morris_helper(STNU, node, unstarted, started, finished):
     started.remove(node)
     finished.append(node)
     return True
+

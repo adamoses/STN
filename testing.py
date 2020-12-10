@@ -28,6 +28,17 @@ def naive_test(file):
     stn1.update_distances(fw1)
     print("dist mat after naive: ", stn1.naive_update_distances(edge))
 
+def naive_test(file):
+    stn1 = stringToSTN(file)
+    rand_tp_1 = random.choice(stn1.get_names) 
+    rand_tp_2 = random.choice(stn1.get_names)
+    #edge = 'D 4 E'
+    edge = rand_tp_1 + random.randint(0,5) + rand_tp_2
+    print("edge: ", edge)
+    fw1 = floyd_warshall(stn1)
+    stn1.update_distances(fw1)
+    print("dist mat after naive: ", stn1.naive_update_distances(edge))
+
 def dijkstra_test(file):
     stn = stringToSTN(file)
     print("\n", dijkstra(stn, 0, False, False))
@@ -69,6 +80,7 @@ algo_strings = ["floyd_warshall", "naive_update_distances", " dijkstra", "bellma
 algo_funcs = [floyd_warshall_test, naive_test, dijkstra_test, bellman_ford_test, dpc_test, prop_test, update_potential_test]
 
 def test_all_sample_stns():
+
     
     print("\nEnter algorithm (or number) to test (case sensitive): \n")
     for i, label in enumerate(algo_strings):
@@ -97,6 +109,3 @@ def test_all_sample_stns():
     
 
 test_all_sample_stns()
-        
-
-

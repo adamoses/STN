@@ -8,14 +8,17 @@ Meetings: Saturdays at 6pm ET
 # Tasks for this week:
 
 ## Adam Moses
-- New Time points
-- fwd/bkwd prop
+Keep track of contingent time points
+negative nodes?
+Normal Form
+2014 algorithm (algo 6 in paper he emailed)
 
 ## Daniel Doyon
 - Johnson's Algorithm
 
 ##  Gabor Ptacek
 - Ramalingam99 alg
+- naive test
 
 ##  Cameron Flores
 - Ramalingam99 alg
@@ -33,3 +36,5 @@ Meetings: Saturdays at 6pm ET
 
 ## For insert_edge() -
 - check for negative weight cycle (A->B < -B->A)
+
+
