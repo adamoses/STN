@@ -24,8 +24,7 @@ from STNU import *
 
 def stringToSTN(input):
 
-    path = "C:\\Users\\Cameron\\Desktop\\STN\\STN\\sample_STNs\\" + input
-    stn = open(path, "r")
+    stn = open(input, "r")
     stn_string = stn.read()
     stn.close()
 

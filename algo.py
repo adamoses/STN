@@ -250,7 +250,8 @@ def prop_fwd_prop_bkwd(STN, edge, string=True):
         y = edge[2]
 
     if not STN.get_dist_mat_upd():
-        print('\nDistance Matrix Must be Updated to run prop_fwd_prop_bkwd()\n')
+        m = floyd_warshall(STN)
+        STN.update_distances(m)
 
     dist_mat = STN.get_dist_mat()
     successors = STN.get_succs()
@@ -368,40 +369,50 @@ def morris_helper(STNU, node, unstarted, started, finished):
         if not np.isnan(n):
             activation_nodes.append(int(n))
 
-    priorityQ = PriorityQueue()
+    priorityQ = PriorityQueueSTN(PriorityQueue())
 
     if (node in activation_nodes):
-        priorityQ.put((STNU.get_upper_case_edge(node), STNU.activation_tp[node]))
+
+        priorityQ.insertOrDecreaseKeyIfSmaller(STNU.activation_tp[node], STNU.get_upper_case_edge(node))
         index = int(STNU.activation_tp[node])
         distances[index] = STNU.get_upper_case_edge(node)
     else:
         preds = STNU.get_preds()
+
         for p in np.arange(len(preds)):
             keys = preds[p].keys()
 
             for key in keys:
                 if preds[p][key] < 0:
-                    priorityQ.put((preds[p][key], key))
+                    priorityQ.insertOrDecreaseKeyIfSmaller(key, preds[p][key])
                     distances[key] = preds[p][key]
 
     while not priorityQ.empty():
-        print(priorityQ.qsize())
-        u = priorityQ.get()
+        u = priorityQ.extractMinNode()
 
-        if distances[int(u[1])] >= 0:
-            STNU.insert_edge([int(u[1]), u[0], node], string=False)
+        if distances[int(u)] >= 0:
+            STNU.insert_edge([int(u), distances[int(u)], node], string=False)
         else:
-            if (int(u[1]) in unstarted) and (morris_helper(STNU, int(u[1]), unstarted, started, finished) == False):
+            
+            if (int(u) in unstarted or int(u) in started or int(u) in finished) and not morris_helper(STNU, int(u), unstarted, started, finished):
                 return False
-            preds = STNU.get_preds()
-            preds_u = preds[int(u[1])]
-            preds_u_keys = preds_u.keys()
 
+            preds = STNU.get_preds()
+            preds_u = preds[int(u)]
+            
+
+            (v, alpha) = STNU.get_lower_case_tp(int(u))
+
+            if not v == None:
+                preds_u[v] = alpha
+
+            preds_u_keys = preds_u.keys()
 
             for v in preds_u_keys:
                 if preds_u[v] >= 0:
-                    newKey = distances[u[1]] + preds_u[v]
-                    priorityQ.put((newKey, v))
+
+                    newKey = distances[int(u)] + preds_u[v]
+                    priorityQ.insertOrDecreaseKeyIfSmaller(v, newKey)
                     distances[v] = newKey
 
     started.remove(node)
