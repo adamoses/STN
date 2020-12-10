@@ -270,7 +270,7 @@ class STN():
         self.update_distances(old_dist)
         if not solution:
             return False
-        updated_dist = solution
+        updated_sol = solution
         pred = self.get_preds()
 
         #queues
@@ -279,22 +279,26 @@ class STN():
         queue = PriorityQueueSTN(p_queue)
         queue.insert(src_val, 0)
 
+        #loops through priority queue
         while (not(queue.empty())):
             w = queue.extractMinNode()
             
+            #checks the updated dist and adjusts value, potentially added new key to the queue
             for v, hash_table in enumerate(pred):
                 for key in hash_table:
-                    if (updated_dist[v] < updated_dist[w] - hash_table[key]):
-                        updated_dist[v] = updated_dist[w] - hash_table[key]
-                        new_key = solution[v] - updated_dist[v]
+                    if (updated_sol[v] < updated_sol[w] - hash_table[key]):
+                        updated_sol[v] = updated_sol[w] - hash_table[key]
+                        new_key = solution[v] - updated_sol[v]
                         if(queue.insertOrDecreaseKeyIfSmaller(new_key, v)==False):
                             return False
 
-        for index, element in enumerate(updated_dist):
-            temp_edge = [src_val, element, index]
-            self.insert_edge(temp_edge, string=False)  
+        #adds edges, if that's what the user wants, currently commented out
+        #for index, element in enumerate(updated_dist):
+        #    temp_edge = [src_val, element, index]
+        #    self.insert_edge(temp_edge, string=False)  
 
-        return updated_dist
+        #returns updated solution
+        return updated_sol
 
 ####################################################################################
 # - get_source_row(stn, source) :
