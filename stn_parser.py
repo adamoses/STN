@@ -3,8 +3,6 @@ import sys
 from STN import *
 from algo import *
 from STNU import *
-
-
 ####################################################################################
 # - string_to_stn(input) :
 #
@@ -24,8 +22,10 @@ from STNU import *
 #       Returns: an stn object with all the values from the text file
 ####################################################################################
 
-def string_to_stn(input):
-    stn = open(input, "r")
+def stringToSTN(input):
+
+    path = "C:\\Users\\Cameron\\Desktop\\STN\\STN\\sample_STNs\\" + input
+    stn = open(path, "r")
     stn_string = stn.read()
     stn.close()
 
