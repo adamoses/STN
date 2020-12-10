@@ -173,7 +173,7 @@ class STN():
                 if(self.__tp_hash[tp] == name ):
                     return tp
         else:
-            return self.__tp_hash[tp]
+            return self.__tp_hash[name]
 
         return None
 
@@ -251,20 +251,15 @@ class STN():
 
         self.insert_edge(newEdge.split(' '))
         self.update_distances(dist)
-
-
-
         return dist
 
 
 ####################################################################################
 # - update_potential(stn, solution, source) :
 #
-#           stn - an STN object
-#
 #           solution - a solution to the stn object
 #
-#           source - source node
+#           source - source node represented as a string
 #
 #       Returns: updated distance matrix, adds new tightened edges as a side effect
 ####################################################################################
@@ -272,6 +267,8 @@ class STN():
 
     def update_potential(self, solution, src):
 
+        old_dist = self.get_dist_mat()
+        self.update_distances(old_dist)
         if not solution:
             return False
         updated_dist = solution
@@ -284,29 +281,19 @@ class STN():
         queue.insert(src_val, 0)
 
         while (not(queue.empty())):
-            #print("empty?", queue.empty())
             w = queue.extractMinNode()
-            #print("w:", w)
-
-            # remember to change to preds
+            
             for v, hash_table in enumerate(pred):
-                #print("hash:", hash_table)
                 for key in hash_table:
-                    #print("dist_v:", updated_dist[v], "dist_w:", updated_dist[w], "succ", hash_table[key])
                     if (updated_dist[v] < updated_dist[w] - hash_table[key]):
                         updated_dist[v] = updated_dist[w] - hash_table[key]
-                        #print("v_update: ", updated_dist[v])
                         new_key = solution[v] - updated_dist[v]
-                        #print("new key: ", new_key)
                         if(queue.insertOrDecreaseKeyIfSmaller(new_key, v)==False):
                             return False
 
-        # for j in range(updated_dist[0]):
-        #     for i in range(updated_dist):
-        #         if(updated_dist[i][j] <= old_dist[i][j]):
-        #             print([i, updated_dist[i][j], j])
-        #             self.insert_edge([i, updated_dist[i][j], j], False)
-        # self.update_distances(updated_dist)
+        for index, element in enumerate(updated_dist):
+            temp_edge = [src_val, element, index]
+            self.insert_edge(temp_edge, string=False)  
 
         return updated_dist
 
@@ -329,8 +316,6 @@ class STN():
                 row_val = count
                 return row_val
         return False
-
-
 
 ############################################################################################################
 # - STN retrieval functions :
