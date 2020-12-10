@@ -1,6 +1,8 @@
 from STN import STN
 import numpy as np
 from queue import *
+from util import *
+
 
 ####################################################################################
 # algo.py
@@ -344,9 +346,99 @@ def Morris_2014(STNU):
     # identify negative nodes
     negative_nodes = []
 
-    preds = STNU.get_preds()
-    cont_preds = STNU.get_cont_preds()
-    print(cont_preds)
+    # get * nodes from normal form
+    for node in STNU.contingent_tp:
+        if not np.isnan(node):
+            negative_nodes.append(int(node))
 
-    for node in STNU.get_names():
-        print(node)
+    # get predecessor arrays to find negative nodes from ord edges
+    preds = STNU.get_preds()
+
+    # for each node
+    for node in np.arange(len(preds)):
+        neg = False
+
+        # check if it has a negative edge leading to it
+        for value in preds[node].values():
+            if value < 0:
+                neg = True
+
+        if neg:
+            negative_nodes.append(node)
+
+    unstarted = negative_nodes
+    started = []
+    finished = []
+
+
+    for node in negative_nodes:
+        if not morris_helper(STNU, node, unstarted, started, finished):
+            return False
+        
+
+    return True
+
+
+def morris_helper(STNU, node, unstarted, started, finished):
+    if node in started:
+        return False
+    if node in finished:
+        return True
+
+    unstarted.remove(node)
+    started.append(node)
+
+    distances = np.zeros(STNU.get_num_tp())
+    distances[:] = np.inf
+    distances[node] = 0
+
+    activation_nodes = []
+
+    # get * nodes from normal form
+    for n in STNU.contingent_tp:
+        if not np.isnan(n):
+            activation_nodes.append(int(n))
+
+    priorityQ = PriorityQueue()
+
+    if (node in activation_nodes):
+        priorityQ.put((STNU.get_upper_case_edge(node), STNU.activation_tp[node]))
+        index = int(STNU.activation_tp[node])
+        distances[index] = STNU.get_upper_case_edge(node)
+    else:
+        preds = STNU.get_preds()
+        for p in np.arange(len(preds)):
+            keys = preds[p].keys()
+
+            for key in keys:
+                if preds[p][key] < 0:
+                    priorityQ.put((preds[p][key], key))
+                    distances[key] = preds[p][key]
+
+    while not priorityQ.empty():
+        print(priorityQ.qsize())
+        u = priorityQ.get()
+
+        if distances[int(u[1])] >= 0:
+            STNU.insert_edge([int(u[1]), u[0], node], string=False)
+        else:
+            if (int(u[1]) in unstarted) and (morris_helper(STNU, int(u[1]), unstarted, started, finished) == False):
+                return False
+            preds = STNU.get_preds()
+            preds_u = preds[int(u[1])]
+            preds_u_keys = preds_u.keys()
+
+
+            for v in preds_u_keys:
+                if preds_u[v] >= 0:
+                    newKey = distances[u[1]] + preds_u[v]
+                    priorityQ.put((newKey, v))
+                    distances[v] = newKey
+
+    started.remove(node)
+    finished.append(node)
+    return True
+
+
+
+

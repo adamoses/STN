@@ -43,12 +43,16 @@ class STNU():
         self.__dist_mat_updated = False
         self.__ordered_edges = []
         self.__cont_links = []
+        self.activation_tp = np.zeros(num_tp)
+        self.contingent_tp = np.zeros(num_tp)
+
+        self.activation_tp[:] = np.nan
+        self.contingent_tp[:] = np.nan
+
 
         for i in np.arange(num_tp):
             self.__succs = np.append(self.__succs, {})
             self.__preds = np.append(self.__preds, {})
-            self.__cont_succs = np.append(self.__succs, {})
-            self.__cont_preds = np.append(self.__preds, {})
             self.__tp_hash[i] = self.__tp_names[i]
 
          
@@ -58,7 +62,6 @@ class STNU():
                 self.insert_edge(string.split(' '))
             else: 
                 self.insert_edge(string)
-            print(self.__preds)
 
         for i in np.arange(num_cont_links):
             string = contingent_links[i]
@@ -73,6 +76,8 @@ class STNU():
         self.__tp_hash[self.__num_tp-1] = name
         self.__preds = np.append(self.__preds, {})
         self.__succs = np.append(self.__succs, {})
+        self.activation_tp = np.append(self.activation_tp, [np.nan])
+        self.contingent_tp = np.append(self.contingent_tp, [np.nan])
 
         newDist = np.zeros(shape=(self.__num_tp, self.__num_tp)) + np.inf
 
@@ -115,6 +120,10 @@ class STNU():
         if (not self.__succs[from_tp].get(to_tp)) or (self.__succs[from_tp][to_tp] > x):
             self.__dist_mat_updated = False
             self.__num_cont_links += 1
+
+            self.activation_tp[from_tp] = to_tp
+            self.contingent_tp[to_tp] = from_tp
+
             if string:
                 self.__cont_links.append(edge)
             else:
@@ -132,6 +141,8 @@ class STNU():
             str_to_tp = self.find_tp(to_tp, string=False)
             self.__cont_links.remove([str_from_tp, str(edge[1]), str(edge[2]), str_to_tp])
 
+        self.activation_tp[from_tp] = np.nan
+        self.contingent_tp[to_tp] = np.nan
         self.__num_cont_links -= 1
 
     def find_tp(self, name, string=True):
@@ -178,12 +189,6 @@ class STNU():
     def update_preds(self, predescessors):
         self.__preds = predescessors
 
-    def update_cont_succs(self, succsessors):
-        self.__cont_succs = succsessors
-        
-    def update_cont_preds(self, predescessors):
-        self.__cont_preds = predescessors
-
 ############################################################################################################
 # - STNU retrieval functions :
 #
@@ -221,6 +226,26 @@ class STNU():
 
     def get_dist_mat_upd(self):
         return self.__dist_mat_updated and True
+
+    def get_upper_case_edge(self, from_tp):
+        from_tp_str = self.find_tp(from_tp, string=False)
+
+        edges = self.get_cont_links()
+
+        for edge in edges:
+            if edge[0] == from_tp_str:
+                return -int(edge[2])
+        return None
+
+    def get_lower_case_edge(self, to_tp):
+        from_tp_str = self.find_tp(to_tp, string=False)
+
+        edges = self.get_cont_links()
+
+        for edge in edges:
+            if edge[3] == from_tp_str:
+                return int(edge[1])
+        return None
 
     def copy(self):
         return STNU(self.get_num_tp(), self.get_num_edges(), self.get_num_cont_links(), \
