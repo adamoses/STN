@@ -153,40 +153,6 @@ def bellman_ford(stn, src):
 
     return (dist)
     
-""" 
-    succ = stn.get_succs()
-    num_tp = stn.get_num_tp()
-
-    # Step 1: Initialize distances from src to all other vertices
-    # as INFINITE
-    dist = [float("Inf")] * (num_tp)
-    dist[src] = 0
-
-    # Step 2: Relax all edges |V| - 1 times. A simple shortest
-    # path from src to any other vertex can have at-most |V| - 1
-    # edges
-
-    for u, hash_table in enumerate(succ):
-        # Update dist value and parent index of the adjacent vertices of
-        # the picked vertex. Consider only those vertices which are still in
-        # queue
-        for key in hash_table:
-            if dist[u] != float("Inf") and dist[u] + hash_table[key] < dist[key]:
-                dist[key] = dist[u] + hash_table[key]
-        # Step 3: check for negative-weight cycles. The above step
-        # guarantees shortest distances if graph doesn't contain
-        # negative weight cycle. If we get a shorter path, then there
-        # is a cycle.
-        for key in hash_table:
-            print("dist[u] + hash_table[key] < dist[key]: ", dist[u], " + ", hash_table[key], " < ", dist[key], "\n")
-            if dist[u] != float("Inf") and dist[u] + hash_table[key] < dist[key]:
-                print("Graph contains negative weight cycle")
-                return False
-
-    print(dist)
-    return True """
-
-
 ####################################################################################
 # - dpc(STN, node_ordering) :
 #
@@ -306,3 +272,100 @@ def prop_fwd_prop_bkwd(STN, edge, string=True):
     return dist_mat
 
 
+def Morris_2014(STNU):
+
+    # identify negative nodes
+    negative_nodes = []
+
+    # get * nodes from normal form
+    for node in STNU.contingent_tp:
+        if not np.isnan(node):
+            negative_nodes.append(int(node))
+
+    # get predecessor arrays to find negative nodes from ord edges
+    preds = STNU.get_preds()
+
+    # for each node
+    for node in np.arange(len(preds)):
+        neg = False
+
+        # check if it has a negative edge leading to it
+        for value in preds[node].values():
+            if value < 0:
+                neg = True
+
+        if neg:
+            negative_nodes.append(node)
+
+    unstarted = negative_nodes
+    started = []
+    finished = []
+
+
+    for node in negative_nodes:
+        if not morris_helper(STNU, node, unstarted, started, finished):
+            return False
+        
+
+    return True
+
+
+def morris_helper(STNU, node, unstarted, started, finished):
+    if node in started:
+        return False
+    if node in finished:
+        return True
+
+    unstarted.remove(node)
+    started.append(node)
+
+    distances = np.zeros(STNU.get_num_tp())
+    distances[:] = np.inf
+    distances[node] = 0
+
+    activation_nodes = []
+
+    # get * nodes from normal form
+    for n in STNU.contingent_tp:
+        if not np.isnan(n):
+            activation_nodes.append(int(n))
+
+    priorityQ = PriorityQueue()
+
+    if (node in activation_nodes):
+        priorityQ.put((STNU.get_upper_case_edge(node), STNU.activation_tp[node]))
+        index = int(STNU.activation_tp[node])
+        distances[index] = STNU.get_upper_case_edge(node)
+    else:
+        preds = STNU.get_preds()
+        for p in np.arange(len(preds)):
+            keys = preds[p].keys()
+
+            for key in keys:
+                if preds[p][key] < 0:
+                    priorityQ.put((preds[p][key], key))
+                    distances[key] = preds[p][key]
+
+    while not priorityQ.empty():
+        print(priorityQ.qsize())
+        u = priorityQ.get()
+
+        if distances[int(u[1])] >= 0:
+            STNU.insert_edge([int(u[1]), u[0], node], string=False)
+        else:
+            if (int(u[1]) in unstarted) and (morris_helper(STNU, int(u[1]), unstarted, started, finished) == False):
+                return False
+            preds = STNU.get_preds()
+            preds_u = preds[int(u[1])]
+            preds_u_keys = preds_u.keys()
+
+
+            for v in preds_u_keys:
+                if preds_u[v] >= 0:
+                    newKey = distances[u[1]] + preds_u[v]
+                    priorityQ.put((newKey, v))
+                    distances[v] = newKey
+
+    started.remove(node)
+    finished.append(node)
+    return True
