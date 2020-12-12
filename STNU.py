@@ -174,7 +174,7 @@ class STNU():
 
             self.insert_edge([star_node, -lower_case_edge, from_node], string=False)
             self.insert_edge([from_node, lower_case_edge, star_node], string=False)
-            self.insert_cont_link([star_node, 0, upper_case_edge-lower_case_edge, to_node], string=False)
+            self.insert_cont_link([star_node, 0, lower_case_edge-upper_case_edge, to_node], string=False)
 
     def update_distances(self, distances):
         self.__dist_matrix = distances

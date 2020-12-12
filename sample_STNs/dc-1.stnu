@@ -9,7 +9,7 @@ STNU
 # Time-Point Names
 A B C
 # Ordinary Edges
-A 9 B
-B -10000 C
+A -100 B
+B 9 C
 # Contingent Links
 A 3 4 C

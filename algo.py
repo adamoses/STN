@@ -336,11 +336,13 @@ def Morris_2014(STNU):
         if neg:
             negative_nodes.append(node)
 
+    # keep track of started, unstarted, finished
     unstarted = negative_nodes
     started = []
     finished = []
 
 
+    # call helper for each neg node
     for node in negative_nodes:
         if not morris_helper(STNU, node, unstarted, started, finished):
             return False
@@ -355,9 +357,11 @@ def morris_helper(STNU, node, unstarted, started, finished):
     if node in finished:
         return True
 
+    # starting node
     unstarted.remove(node)
     started.append(node)
 
+    # init distance array
     distances = np.zeros(STNU.get_num_tp())
     distances[:] = np.inf
     distances[node] = 0
@@ -369,23 +373,27 @@ def morris_helper(STNU, node, unstarted, started, finished):
         if not np.isnan(n):
             activation_nodes.append(int(n))
 
+    # init priority q
     priorityQ = PriorityQueueSTN(PriorityQueue())
 
+    # if activation node
     if (node in activation_nodes):
 
+        # insert node into q and set distance
         priorityQ.insertOrDecreaseKeyIfSmaller(STNU.activation_tp[node], STNU.get_upper_case_edge(node))
         index = int(STNU.activation_tp[node])
         distances[index] = STNU.get_upper_case_edge(node)
     else:
-        preds = STNU.get_preds()
+        # otherwise propagate along negative edges
+        preds = STNU.get_preds()[node]
 
-        for p in np.arange(len(preds)):
-            keys = preds[p].keys()
+        keys = preds.keys()
 
-            for key in keys:
-                if preds[p][key] < 0:
-                    priorityQ.insertOrDecreaseKeyIfSmaller(key, preds[p][key])
-                    distances[key] = preds[p][key]
+        # loop through each edge entering into node p
+        for key in keys:
+            if preds[key] < 0:
+                priorityQ.insertOrDecreaseKeyIfSmaller(key, preds[key])
+                distances[key] = preds[key]
 
     while not priorityQ.empty():
         u = priorityQ.extractMinNode()
@@ -401,7 +409,7 @@ def morris_helper(STNU, node, unstarted, started, finished):
             preds_u = preds[int(u)]
             
 
-            (v, alpha) = STNU.get_lower_case_tp(int(u))
+            (v, alpha) = STNU.get_lower_case_edge(int(u))
 
             if not v == None:
                 preds_u[v] = alpha
@@ -412,7 +420,7 @@ def morris_helper(STNU, node, unstarted, started, finished):
                 if preds_u[v] >= 0:
 
                     newKey = distances[int(u)] + preds_u[v]
-                    priorityQ.insertOrDecreaseKeyIfSmaller(v, newKey)
+                    priorityQ.insertOrDecreaseKeyIfSmaller(int(v), int(newKey))
                     distances[v] = newKey
 
     started.remove(node)
