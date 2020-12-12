@@ -2,6 +2,7 @@ from STN import STN
 import numpy as np
 from queue import *
 from util import *
+import copy
 
 ####################################################################################
 # algo.py
@@ -384,39 +385,54 @@ def morris_helper(STNU, node, unstarted, started, finished):
         index = int(STNU.activation_tp[node])
         distances[index] = STNU.get_upper_case_edge(node)
     else:
-        # otherwise propagate along negative edges
+        # otherwise propagate along negative ordinary edges
         preds = STNU.get_preds()[node]
 
         keys = preds.keys()
 
         # loop through each edge entering into node p
         for key in keys:
+            # if negative ordinary edge
             if preds[key] < 0:
+                # insert into q and update distance array
                 priorityQ.insertOrDecreaseKeyIfSmaller(key, preds[key])
                 distances[key] = preds[key]
 
+    # while q not empty
     while not priorityQ.empty():
+        # get min node
         u = priorityQ.extractMinNode()
 
+        # if distance is greater than 0, insert edge
         if distances[int(u)] >= 0:
             STNU.insert_edge([int(u), distances[int(u)], node], string=False)
+
+        # otherwise
         else:
-            
+            # check if u is negative node. If it is negative node, recursive call on u 
+            # if false, negative loop
             if (int(u) in unstarted or int(u) in started or int(u) in finished) and not morris_helper(STNU, int(u), unstarted, started, finished):
                 return False
 
+            # get preds of u 
             preds = STNU.get_preds()
-            preds_u = preds[int(u)]
+            preds_u = copy.deepcopy(preds[int(u)])
             
-
+            # get lowercases edge to u if exists
             (v, alpha) = STNU.get_lower_case_edge(int(u))
 
+
+            # check if lowercase edge exists. 
             if not v == None:
                 preds_u[v] = alpha
 
+
             preds_u_keys = preds_u.keys()
 
+            # for each pred of v
             for v in preds_u_keys:
+
+                # if distance is positive
                 if preds_u[v] >= 0:
 
                     newKey = distances[int(u)] + preds_u[v]
