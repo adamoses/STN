@@ -122,8 +122,3 @@ test = string_to_stnu('sample_STNs/dc-1.stnu')
 test.to_normal()
 
 Morris_2014(test)
-
-
-# print(stnu_to_string(test), '\n\n')
-
-# print(test.get_cont_preds())

@@ -240,6 +240,19 @@ def dpc(stn, node_ordering):
     print ("Consistent!")
     return True
 
+####################################################################################
+# - prop_fwd_prop_bkwd(STN, edge, string=True) :
+#
+#           STN - an STN object
+#
+#           edge - edge to insert into STN
+#
+#           string - kwarg to specify edge input format
+#
+#       Returns: False if there is a negative weight cycle and updated 
+#                distance matrix otherwise
+####################################################################################
+
 def prop_fwd_prop_bkwd(STN, edge, string=True):
     if string:
         x = STN.find_tp(edge[0])
@@ -250,21 +263,26 @@ def prop_fwd_prop_bkwd(STN, edge, string=True):
         delta = edge[1]
         y = edge[2]
 
-    if not STN.get_dist_mat_upd():
-        m = floyd_warshall(STN)
-        STN.update_distances(m)
 
+    if not STN.get_dist_mat_upd():
+        print('You must have an updated distance matrix')
+        quit()
+
+    # get distance matrix, succ, preds
     dist_mat = STN.get_dist_mat()
     successors = STN.get_succs()
     predecessors = STN.get_preds()
 
+    # if existing distance less than new edge weight, return current dist matrix
     if dist_mat[x][y] <= delta:
         return dist_mat
 
+    # update distances
     successors[x][y] = delta
     predecessors[y][x] = delta
     dist_mat[x][y] = delta
 
+    # keep track during fwd prop
     encountered = [y]
     changed = [y]
     to_do = [y]
@@ -311,6 +329,14 @@ def prop_fwd_prop_bkwd(STN, edge, string=True):
                         dist_mat[e][w] = dist_mat[e][x] + dist_mat[x][w]
                         to_do.append(e)
     return dist_mat
+
+####################################################################################
+# - Morris_2014(STNU) :
+#
+#           STNU - an STNU object
+#
+#       Returns: False if there is a negative weight cycle and true otherwise
+####################################################################################
 
 def Morris_2014(STNU):
 
@@ -435,8 +461,11 @@ def morris_helper(STNU, node, unstarted, started, finished):
                 # if distance is positive
                 if preds_u[v] >= 0:
 
+                    # new priority, cumulutaive distance
                     newKey = distances[int(u)] + preds_u[v]
+                    # update priority
                     priorityQ.insertOrDecreaseKeyIfSmaller(int(v), int(newKey))
+                    # update distance
                     distances[v] = newKey
 
     started.remove(node)
