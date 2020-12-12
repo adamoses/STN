@@ -37,11 +37,12 @@ class PriorityQueueSTN():
             counter = counter + 1
 
     def state(self, x):
-        # in popped    
-        if x in self.popped:
-            return self.alreadyPopped
+        # in popped
+        for val, index in self.popped:
+            if x == val:
+                return self.alreadyPopped
         # Not yet in Q
-        elif x not in self.queue:
+        if x not in self.queue:
             return self.notYetinQ
         # in Q    
         elif x in self.queue:
@@ -87,9 +88,6 @@ class PriorityQueueSTN():
             if p < self.key(x):
                 return False
         return True
-
-    def addToPopped(self, item):
-        self.popped.insert(item)
 
     def setp_queue(self):
         p_queue = PriorityQueue()
