@@ -174,7 +174,7 @@ class STNU():
 
             self.insert_edge([star_node, -lower_case_edge, from_node], string=False)
             self.insert_edge([from_node, lower_case_edge, star_node], string=False)
-            self.insert_cont_link([star_node, 0, lower_case_edge-upper_case_edge, to_node], string=False)
+            self.insert_cont_link([star_node, 0, upper_case_edge-lower_case_edge, to_node], string=False)
 
     def update_distances(self, distances):
         self.__dist_matrix = distances
@@ -235,13 +235,13 @@ class STNU():
         return None
 
     def get_lower_case_edge(self, to_tp):
-        from_tp_str = self.find_tp(to_tp, string=False)
+        to_tp_str = self.find_tp(to_tp, string=False)
 
         edges = self.get_cont_links()
 
         for edge in edges:
-            if edge[3] == from_tp_str:
-                return (self.find_tp(from_tp_str), int(edge[1]))
+            if edge[3] == to_tp_str:
+                return (self.find_tp(edge[0]), int(edge[1]))
         return (None, None)
 
     def copy(self):

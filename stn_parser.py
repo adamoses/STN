@@ -116,9 +116,3 @@ def stn_to_string(input):
     string += '\n'.join(edges)
 
     return string
-
-test = string_to_stnu('sample_STNs/dc-1.stnu')
-
-test.to_normal()
-
-Morris_2014(test)

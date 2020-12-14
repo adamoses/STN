@@ -370,6 +370,7 @@ def Morris_2014(STNU):
 
 
     # call helper for each neg node
+
     for node in negative_nodes:
         if not morris_helper(STNU, node, unstarted, started, finished):
             return False
@@ -383,6 +384,7 @@ def morris_helper(STNU, node, unstarted, started, finished):
         return False
     if node in finished:
         return True
+
 
     # starting node
     unstarted.remove(node)
@@ -407,9 +409,10 @@ def morris_helper(STNU, node, unstarted, started, finished):
     if (node in activation_nodes):
 
         # insert node into q and set distance
-        priorityQ.insertOrDecreaseKeyIfSmaller(STNU.activation_tp[node], STNU.get_upper_case_edge(node))
+        priorityQ.insert(STNU.activation_tp[node], STNU.get_upper_case_edge(node))
         index = int(STNU.activation_tp[node])
         distances[index] = STNU.get_upper_case_edge(node)
+
     else:
         # otherwise propagate along negative ordinary edges
         preds = STNU.get_preds()[node]
@@ -421,8 +424,9 @@ def morris_helper(STNU, node, unstarted, started, finished):
             # if negative ordinary edge
             if preds[key] < 0:
                 # insert into q and update distance array
-                priorityQ.insertOrDecreaseKeyIfSmaller(key, preds[key])
+                priorityQ.insert(key, preds[key])
                 distances[key] = preds[key]
+
 
     # while q not empty
     while not priorityQ.empty():
@@ -440,35 +444,37 @@ def morris_helper(STNU, node, unstarted, started, finished):
             if (int(u) in unstarted or int(u) in started or int(u) in finished) and not morris_helper(STNU, int(u), unstarted, started, finished):
                 return False
 
+
             # get preds of u 
             preds = STNU.get_preds()
-            preds_u = copy.deepcopy(preds[int(u)])
+            preds_u = preds[int(u)]
             
             # get lowercases edge to u if exists
             (v, alpha) = STNU.get_lower_case_edge(int(u))
 
-
             # check if lowercase edge exists. 
-            if not v == None:
-                preds_u[v] = alpha
+            if (not v == None) and (not int(v) == int(node)):
+                
+                preds_u[int(v)] = int(alpha)
 
 
             preds_u_keys = preds_u.keys()
 
+
             # for each pred of v
             for v in preds_u_keys:
 
-                # if distance is positive
+                # if alpha is positive
                 if preds_u[v] >= 0:
 
                     # new priority, cumulutaive distance
-                    newKey = distances[int(u)] + preds_u[v]
+                    newKey = distances[int(u)] + preds_u[int(v)]
                     # update priority
                     priorityQ.insertOrDecreaseKeyIfSmaller(int(v), int(newKey))
                     # update distance
-                    distances[v] = newKey
+                    distances[int(v)] = priorityQ.key(int(v))
 
-    started.remove(node)
-    finished.append(node)
+    started.remove(int(node))
+    finished.append(int(node))
     return True
 
